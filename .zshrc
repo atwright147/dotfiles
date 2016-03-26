@@ -56,6 +56,9 @@ print -Pn "\e]0; %n@%M: %~\a"   # terminal title
 # Aliases
 source ~/dotfiles/.aliases
 
+# Paths
+export PATH="/usr/local/sbin:$PATH"
+
 # Make sure to use double quotes to prevent shell expansion
 zplug "rimraf/k"
 zplug "djui/alias-tips"
