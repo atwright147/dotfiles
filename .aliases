@@ -158,3 +158,8 @@ alias reload="exec $SHELL -l"
 
 # Make sourceTree work on the command line (https://jira.atlassian.com/browse/SRCTREE-3172)
 alias stree="/Applications/SourceTree.app/Contents/Resources/stree"
+
+# NPM utilities
+# list top level packages only
+alias ng="npm list -g --depth=0 2>/dev/null"  # global
+alias nl="npm list --depth=0 2>/dev/null"     # local
