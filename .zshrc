@@ -147,6 +147,10 @@ bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
 
+# Set terminal title
+precmd() {
+	print -Pn "\e]0;\a"
+}
 
 # Theme
 zplug "bhilburn/powerlevel9k", of:powerlevel9k.zsh-theme
