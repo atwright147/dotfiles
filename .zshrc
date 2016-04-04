@@ -163,9 +163,26 @@ bindkey '^[[B' history-substring-search-down
 
 
 # Theme
+if [[ "$SYSTEM_USAGE" == home ]]; then
+	export TOOL_VERSION='php_version'
+elif [[ "$SYSTEM_USAGE" == work ]]; then
+	export TOOL_VERSION='node_version'
+	if [[ -f ~/.proxy ]]; then
+		source ~/.proxy
+	fi
+
+else 
+	echo "No environment file found."
+fi
+
+
+# fix garish, unreadable green and yellow node segment colours
+POWERLEVEL9K_NODE_VERSION_BACKGROUND="red"
+POWERLEVEL9K_NODE_VERSION_FOREGROUND="white"
+
 zplug "bhilburn/powerlevel9k", of:powerlevel9k.zsh-theme
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status history time php_version)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status history time $TOOL_VERSION)
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
 POWERLEVEL9K_SHORTEN_DELIMITER=""
 POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
