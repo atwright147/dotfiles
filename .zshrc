@@ -83,7 +83,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $users -o pid,%cpu,tty,cputime,cmd'
 
 
 
-
+DISABLE_AUTO_TITLE="true"
 
 setopt menu_complete
 
@@ -116,7 +116,22 @@ unsetopt hup                    # no hup signal at shell exit
 unsetopt ignore_eof             # do not exit on end-of-file
 unsetopt list_beep              # no bell on ambiguous completion
 unsetopt rm_star_silent         # ask for confirmation for `rm *' or `rm path/*'
-print -Pn "\e]0; %n@%M: %~\a"   # terminal title
+
+# Set terminal title
+#print -Pn "\e]0; %n@%M: %~\a"
+#print -Pn "\e]0;\a"
+
+set-window-title() {
+  window_title="\e]0;${${PWD/#"$HOME"/~}/projects/p}\a"
+  #window_title="\e]0;\a"
+  echo -ne "$window_title"
+}
+
+PR_TITLEBAR=''
+set-window-title
+precmd() {
+	set-window-title
+}
 
 
 # Aliases
@@ -146,11 +161,6 @@ bindkey "$terminfo[cud1]" history-substring-search-down
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
-
-# Set terminal title
-precmd() {
-	print -Pn "\e]0;\a"
-}
 
 # Theme
 zplug "bhilburn/powerlevel9k", of:powerlevel9k.zsh-theme
