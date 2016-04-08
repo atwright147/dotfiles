@@ -13,34 +13,6 @@ fi
 # Essential
 source ~/.zplug/zplug
 
-# from: http://www.refining-linux.org/archives/40/ZSH-Gem-5-Menu-selection/
-#autoload -U compinit && compinit
-#zstyle ':completion:*' menu select
-#zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-#zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-
-# FROM: https://scottlinux.com/2011/08/19/quick-intro-to-zsh-auto-complete/
-# Use modern completion system
-#autoload -Uz compinit
-#compinit
-#
-#zstyle ':completion:*' auto-description 'specify: %d'
-#zstyle ':completion:*' completer _expand _complete _correct _approximate
-#zstyle ':completion:*' format 'Completing %d'
-#zstyle ':completion:*' group-name ''
-#zstyle ':completion:*' menu select
-#zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-#zstyle ':completion:*' list-colors ''
-#zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-#zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
-#zstyle ':completion:*' menu select=long
-#zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-#zstyle ':completion:*' use-compctl false
-#zstyle ':completion:*' verbose true
-#
-#zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-#zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
-
 # FROM: https://dustri.org/b/my-zsh-configuration.html
 ##
 # Completion
