@@ -110,7 +110,10 @@ precmd() {
 source ~/dotfiles/.aliases
 
 # Paths
+export MAVEN_HOME="/development/tools/maven"
 export PATH="/usr/local/sbin:$PATH"
+export PATH="$MAVEN_HOME/bin:$PATH"
+
 
 # Make sure to use double quotes to prevent shell expansion
 zplug "rimraf/k"
