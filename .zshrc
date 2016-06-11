@@ -94,9 +94,9 @@ unsetopt rm_star_silent         # ask for confirmation for `rm *' or `rm path/*'
 #print -Pn "\e]0;\a"
 
 set-window-title() {
-  window_title="\e]0;${${PWD/#"$HOME"/~}/projects/p}\a"
-  #window_title="\e]0;\a"
-  echo -ne "$window_title"
+	window_title="\e]0;${${PWD/#"$HOME"/~}/projects/p}\a"
+	#window_title="\e]0;\a"
+	echo -ne "$window_title"
 }
 
 PR_TITLEBAR=''
