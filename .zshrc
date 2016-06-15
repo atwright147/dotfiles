@@ -13,6 +13,11 @@ fi
 # Essential
 source ~/.zplug/zplug
 
+# Sources
+if [ -f ~/.iterm2_shell_integration.`basename $SHELL` ]; then
+	source ~/.iterm2_shell_integration.`basename $SHELL`
+fi
+
 # FROM: https://dustri.org/b/my-zsh-configuration.html
 ##
 # Completion
@@ -94,9 +99,9 @@ unsetopt rm_star_silent         # ask for confirmation for `rm *' or `rm path/*'
 #print -Pn "\e]0;\a"
 
 set-window-title() {
-  window_title="\e]0;${${PWD/#"$HOME"/~}/projects/p}\a"
-  #window_title="\e]0;\a"
-  echo -ne "$window_title"
+	window_title="\e]0;${${PWD/#"$HOME"/~}/projects/p}\a"
+	#window_title="\e]0;\a"
+	echo -ne "$window_title"
 }
 
 PR_TITLEBAR=''
