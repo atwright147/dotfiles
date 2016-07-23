@@ -164,4 +164,4 @@ alias stree="/Applications/SourceTree.app/Contents/Resources/stree"
 alias ng="npm list -g --depth=0 2>/dev/null"  # global
 alias nl="npm list --depth=0 2>/dev/null"     # local
 
-alias phpunit="./vendor/bin/phpunit"
+alias phpunit="vendor/bin/phpunit"
