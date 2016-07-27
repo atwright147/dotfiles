@@ -9,8 +9,7 @@ export TERM="xterm-256color"
 
 if [ -f ~/.env ]; then
 	source ~/.env
-else 
-	echo "No environment file found."
+	echo "Environment file loaded."
 fi
 
 # Essential
