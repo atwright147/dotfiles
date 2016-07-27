@@ -1,3 +1,6 @@
+LANG=en_US.UTF8
+export TERM="xterm-256color"
+
 # Check if zplug is installed
 [[ -d ~/.zplug ]] || {
 	curl -fLo ~/.zplug/zplug --create-dirs https://git.io/zplug
