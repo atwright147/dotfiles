@@ -1,5 +1,6 @@
-LANG=en_US.UTF8
+export LANG="en_US.UTF8"
 export TERM="xterm-256color"
+export POWERLEVEL9K_INSTALLATION_PATH="$HOME/.zplug/repos/bhilburn/powerlevel9k"
 
 # Check if zplug is installed
 [[ -d ~/.zplug ]] || {
