@@ -163,7 +163,7 @@ fi
 POWERLEVEL9K_NODE_VERSION_BACKGROUND="red"
 POWERLEVEL9K_NODE_VERSION_FOREGROUND="white"
 
-zplug "bhilburn/powerlevel9k", of:powerlevel9k.zsh-theme
+zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status history time $TOOL_VERSION)
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
