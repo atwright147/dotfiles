@@ -154,9 +154,6 @@ elif [[ "$SYSTEM_USAGE" == work ]]; then
 	if [[ -f ~/.proxy ]]; then
 		source ~/.proxy
 	fi
-
-else 
-	echo "No environment file found."
 fi
 
 
