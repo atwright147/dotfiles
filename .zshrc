@@ -1,6 +1,7 @@
 export LANG="en_GB.UTF8"
 export LC_CTYPE="en_GB.UTF-8"
 export LC_ALL="en_GB.UTF-8"
+export TERM="xterm-256color"
 
 # Check if zplug is installed
 [[ -d ~/.zplug ]] || {
