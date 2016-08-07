@@ -115,8 +115,9 @@ precmd() {
 }
 
 
-# Aliases
+# Includes
 source ~/dotfiles/.aliases
+source ~/dotfiles/.functions
 
 # Paths
 export MAVEN_HOME="/development/tools/maven"

@@ -1,0 +1,6 @@
+# from: http://www.digitalinternals.com/unix/unix-linux-include-header-in-grep-result/478/
+function grepb () {
+	IFS= read -r header
+	echo "$header"
+	grep "$@"
+}
