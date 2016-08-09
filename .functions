@@ -4,3 +4,14 @@ function grepb () {
 	echo "$header"
 	grep "$@"
 }
+
+# No arguments: `git status`
+# With arguments: acts like `git`
+# from: https://github.com/thoughtbot/dotfiles/blob/master/zsh/functions/g
+function g() {
+	if [[ $# -gt 0 ]]; then
+		git $*
+	else
+		git status
+	fi
+}
