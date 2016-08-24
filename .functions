@@ -15,3 +15,17 @@ function g() {
 		git status
 	fi
 }
+
+# Run "up" to "cd ..", or I can run "up 6" to "cd ../../../../../.."
+# from: https://news.ycombinator.com/item?id=9869231#up_9869613
+function up {
+	if [[ "$#" < 1 ]] ; then
+		cd ..
+	else
+		CDSTR=""
+		for i in {1..$1} ; do
+			CDSTR="../$CDSTR"
+		done
+		cd $CDSTR
+	fi
+}
