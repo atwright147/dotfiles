@@ -165,3 +165,5 @@ alias ng="npm list -g --depth=0 2>/dev/null"  # global
 alias nl="npm list --depth=0 2>/dev/null"     # local
 
 alias phpunit="vendor/bin/phpunit"
+
+alias serve='python -m SimpleHTTPServer 8000'
