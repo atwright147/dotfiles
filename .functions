@@ -29,3 +29,8 @@ function up {
 		cd $CDSTR
 	fi
 }
+
+function takedir() {
+	mkdir -p "$1"
+	cd "$1"
+}
