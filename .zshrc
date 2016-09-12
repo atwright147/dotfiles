@@ -119,6 +119,11 @@ precmd() {
 source ~/dotfiles/.aliases
 source ~/dotfiles/.functions
 
+# Node
+export NPM_PACKAGES="${HOME}/.npm-packages"
+export NODE_PATH="${NPM_PACKAGES}/lib/node_modules:${NODE_PATH}"  
+export PATH="${NPM_PACKAGES}/bin:${PATH}"
+
 # Paths
 export MAVEN_HOME="/development/tools/maven"
 export PATH="/usr/local/sbin:$PATH"
