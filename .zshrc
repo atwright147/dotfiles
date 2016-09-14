@@ -137,6 +137,7 @@ zplug "rimraf/k"
 zplug "djui/alias-tips"
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "zsh-users/zsh-completions"
+zplug "rupa/z", use:"*.sh"
 
 
 # History Substring Search
