@@ -4,10 +4,10 @@ export LC_ALL="en_GB.UTF-8"
 export TERM="xterm-256color"
 
 # Check if zplug is installed
-[[ -d ~/.zplug ]] || {
-	curl -fLo ~/.zplug/zplug --create-dirs https://git.io/zplug
-	source ~/.zplug/zplug && zplug update --self
-}
+if [[ ! -d ~/.zplug ]]; then
+	git clone https://github.com/zplug/zplug ~/.zplug
+	source ~/.zplug/init.zsh && zplug update --self
+fi
 
 if [ -f ~/.env ]; then
 	source ~/.env
@@ -15,7 +15,7 @@ if [ -f ~/.env ]; then
 fi
 
 # Essential
-source ~/.zplug/zplug
+source ~/.zplug/init.zsh
 
 # Sources
 if [ -f ~/.iterm2_shell_integration.`basename $SHELL` ]; then
