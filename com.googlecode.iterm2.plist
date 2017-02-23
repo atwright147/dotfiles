@@ -223,6 +223,8 @@
 	</dict>
 	<key>Default Bookmark Guid</key>
 	<string>E18FC4BC-E767-45F5-A047-BD0B05DF1898</string>
+	<key>DimOnlyText</key>
+	<true/>
 	<key>HideTab</key>
 	<false/>
 	<key>LoadPrefsFromCustomFolder</key>
