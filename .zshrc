@@ -133,7 +133,7 @@ export PATH="/usr/local/bin:$PATH"
 
 
 # Make sure to use double quotes to prevent shell expansion
-zplug "rimraf/k"
+zplug "supercrabtree/k"
 zplug "djui/alias-tips"
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "zsh-users/zsh-completions"
