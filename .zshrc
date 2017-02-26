@@ -131,6 +131,9 @@ export PATH="$MAVEN_HOME/bin:$PATH"
 export PATH=$HOME"/bin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 
+# Misc
+export EDITOR="nano"
+export VISUAL="code"
 
 # Make sure to use double quotes to prevent shell expansion
 zplug "supercrabtree/k"
