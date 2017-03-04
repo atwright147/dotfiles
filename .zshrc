@@ -141,6 +141,7 @@ zplug "djui/alias-tips"
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "zsh-users/zsh-completions"
 zplug "rupa/z", use:"*.sh"
+zplug "felixr/docker-zsh-completion"
 
 
 # History Substring Search
