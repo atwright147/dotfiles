@@ -160,7 +160,7 @@ bindkey '^[[B' history-substring-search-down
 
 # Theme
 if [[ "$SYSTEM_USAGE" == home ]]; then
-	export TOOL_VERSION='php_version'
+	export TOOL_VERSION='node_version'
 elif [[ "$SYSTEM_USAGE" == work ]]; then
 	export TOOL_VERSION='node_version'
 	if [[ -f ~/.proxy ]]; then
