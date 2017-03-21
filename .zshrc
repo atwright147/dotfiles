@@ -60,7 +60,7 @@ users=(`whoami` root)           # because I don't care about others
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $users -o pid,%cpu,tty,cputime,cmd'
 
-
+compdef g=git
 
 
 
