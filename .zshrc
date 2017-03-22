@@ -179,6 +179,7 @@ if [[ -d "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Curren
 	PATH="${PATH}:/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources"
 fi
 
+PATH=${PATH}:$HOME/dotfiles/bin
 
 # fix garish, unreadable green and yellow node segment colours
 POWERLEVEL9K_NODE_VERSION_BACKGROUND="red"
