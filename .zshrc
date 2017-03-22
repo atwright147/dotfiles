@@ -169,6 +169,16 @@ elif [[ "$SYSTEM_USAGE" == work ]]; then
 	fi
 fi
 
+# Hidden macOS utilities
+# The `stroke` utility
+if [[ -d "/System/Library/CoreServices/Applications/Network Utility.app/Contents/Resources" ]]; then
+	PATH="${PATH}:/System/Library/CoreServices/Applications/Network Utility.app/Contents/Resources"
+fi
+# The `airport` utility
+if [[ -d "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources" ]]; then
+	PATH="${PATH}:/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources"
+fi
+
 
 # fix garish, unreadable green and yellow node segment colours
 POWERLEVEL9K_NODE_VERSION_BACKGROUND="red"
