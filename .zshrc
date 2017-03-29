@@ -142,6 +142,11 @@ zplug "zsh-users/zsh-syntax-highlighting"
 zplug "zsh-users/zsh-completions"
 zplug "rupa/z", use:"*.sh"
 zplug "felixr/docker-zsh-completion"
+zplug "tj/burl", \
+    from:github, \
+    as:command, \
+    rename-to:burl, \
+    use:"*bin/burl"
 
 
 # History Substring Search
