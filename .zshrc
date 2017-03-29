@@ -172,6 +172,9 @@ elif [[ "$SYSTEM_USAGE" == work ]]; then
 	if [[ -f ~/.proxy ]]; then
 		source ~/.proxy
 	fi
+	if [[ -f ~/proxy.env ]]; then
+		source ~/proxy.env
+	fi
 fi
 
 # Hidden macOS utilities
