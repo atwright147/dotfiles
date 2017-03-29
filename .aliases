@@ -169,3 +169,5 @@ alias phpunit="vendor/bin/phpunit"
 alias serve='python -m SimpleHTTPServer 8000'
 
 alias please='sudo $(fc -ln -1)'
+
+alias tkdir='takedir'

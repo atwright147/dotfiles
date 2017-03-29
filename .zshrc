@@ -60,7 +60,7 @@ users=(`whoami` root)           # because I don't care about others
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $users -o pid,%cpu,tty,cputime,cmd'
 
-
+compdef g=git
 
 
 
@@ -131,6 +131,9 @@ export PATH="$MAVEN_HOME/bin:$PATH"
 export PATH=$HOME"/bin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 
+# Misc
+export EDITOR="nano"
+export VISUAL="code"
 
 # Make sure to use double quotes to prevent shell expansion
 zplug "supercrabtree/k"
@@ -138,6 +141,7 @@ zplug "djui/alias-tips"
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "zsh-users/zsh-completions"
 zplug "rupa/z", use:"*.sh"
+zplug "felixr/docker-zsh-completion"
 
 
 # History Substring Search
@@ -157,7 +161,7 @@ bindkey '^[[B' history-substring-search-down
 
 # Theme
 if [[ "$SYSTEM_USAGE" == home ]]; then
-	export TOOL_VERSION='php_version'
+	export TOOL_VERSION='node_version'
 elif [[ "$SYSTEM_USAGE" == work ]]; then
 	export TOOL_VERSION='node_version'
 	if [[ -f ~/.proxy ]]; then
@@ -168,6 +172,17 @@ elif [[ "$SYSTEM_USAGE" == work ]]; then
 	fi
 fi
 
+# Hidden macOS utilities
+# The `stroke` utility
+if [[ -d "/System/Library/CoreServices/Applications/Network Utility.app/Contents/Resources" ]]; then
+	PATH="${PATH}:/System/Library/CoreServices/Applications/Network Utility.app/Contents/Resources"
+fi
+# The `airport` utility
+if [[ -d "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources" ]]; then
+	PATH="${PATH}:/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources"
+fi
+
+PATH=${PATH}:$HOME/dotfiles/bin
 
 # fix garish, unreadable green and yellow node segment colours
 POWERLEVEL9K_NODE_VERSION_BACKGROUND="red"
