@@ -43,6 +43,8 @@ alias cla="clear; la"
 alias cll="clear; ll"
 alias cls="clear; ls"
 alias clal="clear; lal"
+alias klear="clear && printf '\e[3J'"  # https://apple.stackexchange.com/questions/31872/how-do-i-reset-the-scrollback-in-the-terminal-via-a-shell-command#comment-227733
+#alias clear="osascript -e 'if application \"Terminal\" is frontmost then tell application \"System Events\" to keystroke \"k\" using command down'"
 
 # Always enable colored `grep` output
 # Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
