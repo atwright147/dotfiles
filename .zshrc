@@ -21,6 +21,9 @@ source ~/.zplug/init.zsh
 if [ -f ~/.iterm2_shell_integration.`basename $SHELL` ]; then
 	source ~/.iterm2_shell_integration.`basename $SHELL`
 fi
+if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
+	source /usr/local/bin/virtualenvwrapper.sh
+fi
 
 # FROM: https://dustri.org/b/my-zsh-configuration.html
 ##
@@ -194,7 +197,7 @@ POWERLEVEL9K_NODE_VERSION_FOREGROUND="white"
 
 zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status history time $TOOL_VERSION)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status history time $TOOL_VERSION virtualenv)
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
 POWERLEVEL9K_SHORTEN_DELIMITER=""
 POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
