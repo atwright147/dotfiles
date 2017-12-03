@@ -65,6 +65,10 @@ zstyle ':completion:*:kill:*' command 'ps -u $users -o pid,%cpu,tty,cputime,cmd'
 
 compdef g=git
 
+if [ -f /usr/local/share/zsh/site-functions/_aws ]; then
+	source /usr/local/share/zsh/site-functions/_aws
+fi
+
 
 
 DISABLE_AUTO_TITLE="true"
