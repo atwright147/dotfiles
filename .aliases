@@ -175,3 +175,7 @@ alias please='sudo $(fc -ln -1)'
 alias tkdir='takedir'
 
 alias k='k -h'
+
+# http://www.commandlinefu.com/commands/view/13697/pretty-print-path-separate-path-per-line
+alias prettyenv="echo $PATH | tr -s ':' '\n'"
+alias pretty-env=prettyenv
