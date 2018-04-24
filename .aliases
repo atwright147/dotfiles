@@ -175,3 +175,5 @@ alias please='sudo $(fc -ln -1)'
 alias tkdir='takedir'
 
 alias k='k -h'
+
+alias coverage='open -a safari ./testOutput/unit/coverage/lcov-report/index.html'
