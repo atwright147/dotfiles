@@ -136,6 +136,7 @@ export PATH="${NPM_PACKAGES}/bin:${PATH}"
 # export PATH="$MAVEN_HOME/bin:$PATH"
 # export PATH=$HOME"/bin:$PATH"
 # export PATH="/usr/local/bin:$PATH"
+export PATH="/opt/local/bin:$PATH"  # to enable macports
 
 # Misc
 export EDITOR="nano"
