@@ -123,8 +123,8 @@ precmd() {
 
 
 # Includes
-source ~/dotfiles/.aliases
-source ~/dotfiles/.functions
+source ~/dotfiles/aliases.sh
+source ~/dotfiles/functions.sh
 
 # Node
 export NPM_PACKAGES="${HOME}/.npm-packages"
