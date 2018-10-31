@@ -132,10 +132,11 @@ export NODE_PATH="${NPM_PACKAGES}/lib/node_modules:${NODE_PATH}"
 export PATH="${NPM_PACKAGES}/bin:${PATH}"
 
 # Paths
-export PATH="/usr/local/sbin:$PATH"
-export PATH="$MAVEN_HOME/bin:$PATH"
-export PATH=$HOME"/bin:$PATH"
-export PATH="/usr/local/bin:$PATH"
+# export PATH="/usr/local/sbin:$PATH"
+# export PATH="$MAVEN_HOME/bin:$PATH"
+# export PATH=$HOME"/bin:$PATH"
+# export PATH="/usr/local/bin:$PATH"
+export PATH="/opt/local/bin:$PATH"  # to enable macports
 
 # Misc
 export EDITOR="nano"

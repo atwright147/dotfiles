@@ -179,3 +179,5 @@ alias k='k -h'
 # http://www.commandlinefu.com/commands/view/13697/pretty-print-path-separate-path-per-line
 alias prettyenv="echo $PATH | tr -s ':' '\n'"
 alias pretty-env=prettyenv
+
+alias coverage='open -a safari ./testOutput/unit/coverage/lcov-report/index.html'
