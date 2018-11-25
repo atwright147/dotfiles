@@ -154,6 +154,7 @@ zplug "tj/burl", \
     as:command, \
     rename-to:burl, \
     use:"*bin/burl"
+zplug "plugins/ng", from:oh-my-zsh
 
 
 # History Substring Search
