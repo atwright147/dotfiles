@@ -202,7 +202,8 @@ PATH=${PATH}:$HOME/dotfiles/bin
 POWERLEVEL9K_NODE_VERSION_BACKGROUND="red"
 POWERLEVEL9K_NODE_VERSION_FOREGROUND="white"
 
-zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
+# zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
+zplug "romkatv/powerlevel10k", use:powerlevel10k.zsh-theme
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status history time node_version virtualenv)
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
