@@ -180,6 +180,6 @@ alias k='k -h'
 alias prettyenv="echo $PATH | tr -s ':' '\n'"
 alias pretty-env=prettyenv
 
-alias coverage='open -a safari ./testOutput/unit/coverage/lcov-report/index.html'
+alias coverage='open -a safari ./coverage/index.html'
 
 eval "$(hub alias -s)"
