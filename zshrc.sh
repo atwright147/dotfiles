@@ -156,6 +156,7 @@ zplug "tj/burl", \
     rename-to:burl, \
     use:"*bin/burl"
 zplug "plugins/ng", from:oh-my-zsh
+zplug "favware/zsh-lerna"
 
 
 # History Substring Search
