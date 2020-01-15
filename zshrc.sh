@@ -157,6 +157,7 @@ zplug "tj/burl", \
     use:"*bin/burl"
 zplug "plugins/ng", from:oh-my-zsh
 zplug "favware/zsh-lerna"
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
 
 # History Substring Search
