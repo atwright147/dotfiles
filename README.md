@@ -31,3 +31,12 @@ cd path/to/dotfiles
 ```
 </li>
 </ol>
+
+## Mac Setup
+
+### Add spacers into Doc
+
+```sh
+defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="small-spacer-tile";}';
+killall Dock
+```
