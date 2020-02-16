@@ -42,3 +42,11 @@ function portkill() {
 	lsof -i TCP:$1 | awk '/LISTEN/{print $2}' | xargs kill -9
 	echo "Port" $1 "found and killed."
 }
+
+# List all installed brew packages with sizes
+# FROM: https://gist.github.com/eguven/23d8c9fc78856bd20f65f8bcf03e691b
+function brew-sizes() {
+	brew list -f1 | xargs -n1 -P8 -I {} \
+		sh -c "brew info {} | egrep '[0-9]* files, ' | sed 's/^.*[0-9]* files, \(.*\)).*$/{} \1/'" | \
+		sort -h -r -k2 - | column -t
+}
