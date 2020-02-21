@@ -142,6 +142,7 @@ export PATH="/usr/local/sbin:$PATH"
 # Misc
 export EDITOR="nano"
 export VISUAL="code"
+export ACKRC=".ackrc"  # allow .ackrc files in any folder (https://edoceo.com/cli/ack)
 
 # Make sure to use double quotes to prevent shell expansion
 zplug "supercrabtree/k"
