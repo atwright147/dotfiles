@@ -40,3 +40,10 @@ cd path/to/dotfiles
 defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="small-spacer-tile";}';
 killall Dock
 ```
+
+## Notes
+
+### Stylish
+
+- [StackOverflow full screen](https://userstyles.org/styles/172637/stackoverflow-simply-wide)
+- [Github Wide](https://userstyles.org/styles/108591/github-wide)
