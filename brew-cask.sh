@@ -1,10 +1,10 @@
 #!/usr/bin/env sh
 
-# quicklook
-brew cask install qlcolorcode
-brew cask install qlmarkdown
-brew cask install qlstephen
-brew cask install quicklook-json
+# quicklook (disabled due to Catalina making them a pain in the arse)
+# brew cask install qlcolorcode
+# brew cask install qlmarkdown
+# brew cask install qlstephen
+# brew cask install quicklook-json
 
 # virtualisation
 brew cask install docker
