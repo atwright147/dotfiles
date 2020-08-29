@@ -42,3 +42,11 @@ brew cask install marshallofsound-google-play-music-player
 brew cask install firefox
 brew cask install google-chrome
 brew cask install microsoft-edge
+
+# versions
+brew tap homebrew/cask-versions
+brew cask install firefox-developer-edition
+
+# drivers
+brew tap homebrew/cask-drivers
+brew cask install logitech-options
