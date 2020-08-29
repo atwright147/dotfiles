@@ -21,9 +21,9 @@ source ~/.zplug/init.zsh
 if [ -f ~/.iterm2_shell_integration.`basename $SHELL` ]; then
 	source ~/.iterm2_shell_integration.`basename $SHELL`
 fi
-if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
-	source /usr/local/bin/virtualenvwrapper.sh
-fi
+# if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
+# 	source /usr/local/bin/virtualenvwrapper.sh
+# fi
 
 # FROM: https://dustri.org/b/my-zsh-configuration.html
 ##
