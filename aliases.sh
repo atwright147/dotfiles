@@ -168,7 +168,7 @@ alias npml="npm list --depth=0 2>/dev/null"     # local
 
 alias phpunit="vendor/bin/phpunit"
 
-alias serve='python -m SimpleHTTPServer 8000'
+alias serve='python3 -m http.server 8000'
 
 alias please='sudo $(fc -ln -1)'
 
