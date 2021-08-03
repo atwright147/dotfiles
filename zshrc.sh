@@ -138,6 +138,7 @@ export PATH="${NPM_PACKAGES}/bin:${PATH}"
 export PATH="/usr/local/bin:$PATH"
 export PATH="/opt/local/bin:$PATH"  # to enable macports
 export PATH="/usr/local/sbin:$PATH"
+export PATH="/Applications/Parallels Desktop.app/Contents/MacOS:$PATH"
 
 # Misc
 export EDITOR="nano"
