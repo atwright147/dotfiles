@@ -43,6 +43,18 @@ killall Dock
 
 ## Notes
 
+### Hub
+
+You might get errors about not being able to find `hub`, install it with:
+
+```sh
+# Mac
+brew install hub
+
+# Debian
+sudo apt install hub
+```
+
 ### Locales
 
 As these dotfiles are intended for a UK user, you might get errors about missing locales.
