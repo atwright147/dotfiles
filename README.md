@@ -34,7 +34,7 @@ cd path/to/dotfiles
 
 ## Mac Setup
 
-### Add spacers into Doc
+### Add spacers into Dock
 
 ```sh
 defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="small-spacer-tile";}';
@@ -42,6 +42,24 @@ killall Dock
 ```
 
 ## Notes
+
+### Locales
+
+As these dotfiles are intended for a UK user, you might get errors about missing locales.
+
+```
+perl: warning: Please check that your locale settings are supported and installed on your system
+```
+
+To fix this (http://askubuntu.com/a/227513):
+
+```sh
+# Generate a locale
+sudo locale-gen "en_GB.UTF-8"
+
+# Set the system up to use the new locale
+sudo dpkg-reconfigure locales
+```
 
 ### Stylish
 
