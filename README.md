@@ -77,3 +77,23 @@ sudo dpkg-reconfigure locales
 
 - [StackOverflow full screen](https://userstyles.org/styles/172637/stackoverflow-simply-wide)
 - [Github Wide](https://userstyles.org/styles/108591/github-wide)
+
+### Meld
+
+#### Dark Mode (Windows)
+
+To enable dark mode open `C:\Program Files (x86)\Meld\etc\gtk-3.0` and change:
+
+```ini
+[Settings]
+gtk-application-prefer-dark-theme=0
+```
+
+to 
+
+```ini
+[Settings]
+gtk-application-prefer-dark-theme=1
+```
+
+Reference: https://gitlab.gnome.org/GNOME/meld/-/issues/554#note_1059359
