@@ -204,8 +204,7 @@ fi
 PATH=${PATH}:$HOME/dotfiles/bin
 
 # fix garish, unreadable green and yellow node segment colours
-POWERLEVEL9K_NODE_VERSION_BACKGROUND="red"
-POWERLEVEL9K_NODE_VERSION_FOREGROUND="white"
+POWERLEVEL9K_NODE_VERSION_FOREGROUND="black"
 
 # zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 zplug "romkatv/powerlevel10k", use:powerlevel10k.zsh-theme
