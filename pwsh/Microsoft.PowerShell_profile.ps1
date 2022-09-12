@@ -12,3 +12,19 @@ Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 
 # Set-PSReadLineOption -PredictionSource History
 # Set-PSReadLineOption -PredictionViewStyle ListView
+
+# open Fork https://git-fork.com/
+if ($env:OS -match 'Windows_NT') {
+    function Invoke-Fork {
+        param($Path)
+        $forkExe = $env:LOCALAPPDATA + '\Fork\Fork.exe'
+        if (-not $Path) {
+            & $forkExe
+        }
+        else {
+            $absolutePath = Resolve-Path $Path
+            & $forkExe $absolutePath
+        }
+    }
+    Set-Alias fork Invoke-Fork
+}
