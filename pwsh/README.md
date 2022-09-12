@@ -36,3 +36,19 @@ Install-Module -Name PSReadLine -AllowClobber -Force
 ```powershell
 winget install JanDeDobbeleer.OhMyPosh
 ```
+
+## Install Profile file
+
+Run the following to find out where your profile should be copied to:
+
+```powershell
+$profile
+```
+
+Copy `Microsoft.PowerShell_profile.ps1` to that location
+
+Reload your profile
+
+```powershell
+. $profile
+```
