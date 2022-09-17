@@ -20,8 +20,9 @@ In Microsoft Terminal open `Settings > Startup` and, under Default profile, sele
 
 Install the following Modules with `Install-Module -name <module>`
 
-- `npm-completion`
-- `z`
+- `Terminal-Icons`
+- `Npm-Completion`
+- `Z`
 
 ## Install PSReadline
 
