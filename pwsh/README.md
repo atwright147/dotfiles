@@ -53,3 +53,23 @@ Reload your profile
 ```powershell
 . $profile
 ```
+
+## Microsoft Terminal
+
+### Settings
+
+Add the following to the terminal actions settings to allow using `Ctrl+K` 
+
+```json
+"actions": [
+    ...
+    { 
+        "command": 
+        { 
+            "action": "sendInput", "input": "cls\r" 
+        }, 
+        "keys": "ctrl+k"
+    },
+    ...
+]
+```

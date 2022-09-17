@@ -28,3 +28,13 @@ if ($env:OS -match 'Windows_NT') {
     }
     Set-Alias fork Invoke-Fork
 }
+
+# https://stackoverflow.com/a/62936536/633056
+Set-PSReadLineOption -AddToHistoryHandler {
+    param($command)
+    if ($command -eq 'cls') {
+        return $false
+    }
+    # Add any other checks you want
+    return $true
+}
