@@ -12,6 +12,10 @@ winget install Microsoft.WindowsTerminal
 winget install Microsoft.PowerShell
 ```
 
+## Install `fnm` (Fast Node Manager)
+
+Follow the instructions in the [Fnm readme](https://conradtheprogrammer.medium.com/save-your-powershell-profile-in-your-dotfiles-repo-8ec723532934)
+
 ## Set PowerShell 7 as Default Profile
 
 In Microsoft Terminal open `Settings > Startup` and, under Default profile, select `PowerShell`
