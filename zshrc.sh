@@ -201,6 +201,10 @@ if [[ -d "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Curren
 	PATH="${PATH}:/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources"
 fi
 
+if [[ -f ~/extras.sh ]]; then
+	source ~/extras.sh
+fi
+
 PATH=${PATH}:$HOME/dotfiles/bin
 
 # fix garish, unreadable green and yellow node segment colours
