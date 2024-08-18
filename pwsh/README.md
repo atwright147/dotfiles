@@ -20,7 +20,27 @@ Follow the instructions in the [Fnm readme](https://conradtheprogrammer.medium.c
 
 In Microsoft Terminal open `Settings > Startup` and, under Default profile, select `PowerShell`
 
-## Install Modules
+## Automatic Setup
+
+Automaticall install all modules
+
+```pwsh
+sudo .\Setup.ps1
+```
+
+## Upgrade PSReadline (cannot be done automatically)
+
+1. Open Windows Terminal
+1. Open an Admin **cmd** session (not PowerShell)
+1. Run the following
+
+```pwsh
+pwsh -noprofile -command "Install-Module PSReadLine -Force -SkipPublisherCheck -scope allusers"
+```
+
+## Manual Setup
+
+### Install Modules
 
 Install the following Modules with `Install-Module -name <module>`
 
@@ -28,18 +48,12 @@ Install the following Modules with `Install-Module -name <module>`
 - `Npm-Completion`
 - `Z`
 
-## Install PSReadline
+### Install PSReadline
 
 Needs to be forced as PSReadline is also bundled in PowerShell but we want a newer version
 
 ```powershell
 Install-Module -Name PSReadLine -AllowClobber -Force
-```
-
-## Install **oh-my-posh**
-
-```powershell
-winget install JanDeDobbeleer.OhMyPosh
 ```
 
 ## Install Profile file
@@ -56,6 +70,12 @@ Reload your profile
 
 ```powershell
 . $profile
+```
+
+## Install **oh-my-posh**
+
+```powershell
+winget install JanDeDobbeleer.OhMyPosh
 ```
 
 ## Microsoft Terminal
