@@ -43,6 +43,16 @@ killall Dock
 
 ## Notes
 
+### Fonts
+
+```
+# install scoop
+
+scoop bucket add nerd-fonts
+scoop update
+scoop install FiraCode-NF
+```
+
 ### Hub
 
 You might get errors about not being able to find `hub`, install it with:

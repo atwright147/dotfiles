@@ -14,7 +14,7 @@ end
 
 -- For example, changing the color scheme:
 config.color_scheme = 'Monokai Remastered'
-config.font = wezterm.font 'Fira Code'
+config.font = wezterm.font 'FiraCode Nerd Font'
 
 
 -- and finally, return the configuration to wezterm
