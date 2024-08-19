@@ -45,9 +45,11 @@ killall Dock
 
 ### Fonts
 
-```
-# install scoop
+```sh
+# Mac
+brew install font-fira-code-nerd-font
 
+# Windows
 scoop bucket add nerd-fonts
 scoop update
 scoop install FiraCode-NF
