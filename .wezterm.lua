@@ -53,13 +53,42 @@ local function list_wsl_distributions()
   return {}
 end
 
--- Set up a keybinding or launcher to start WSL distributions (optional)
+-- Set up a keybinding or launcher to start WSL distributions
 config.launch_menu = config.launch_menu or {}
+
+-- Add WSL distributions to the launch menu if on Windows
 local wsl_envs = list_wsl_distributions()
 for _, distro in ipairs(wsl_envs) do
   table.insert(config.launch_menu, {
     label = "WSL: " .. distro,
     args = {"wsl.exe", "-d", distro },
+  })
+end
+
+-- Add cmd.exe to the launch menu if on Windows
+if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+  table.insert(config.launch_menu, {
+    label = "Command Prompt",
+    args = {"cmd.exe"},
+  })
+end
+
+-- Function to check if PowerShell is available
+local function is_powershell_available()
+  local success, result = pcall(wezterm.run_child_process, {"pwsh", "-Command", "echo 'PowerShell Available'"})
+  
+  -- Ensure result is a string before attempting to use it
+  if success and type(result) == "string" and result:match("PowerShell Available") then
+    return true
+  end
+  return false
+end
+
+-- Add PowerShell to the launch menu if available
+if is_powershell_available() then
+  table.insert(config.launch_menu, {
+    label = "PowerShell",
+    args = {"pwsh", "-NoLogo"},
   })
 end
 
