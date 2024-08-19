@@ -38,15 +38,15 @@ local function list_wsl_distributions()
   if wezterm.target_triple == "x86_64-pc-windows-msvc" then
     -- Attempt to run the WSL command and capture the output
     local success, wsl_list = pcall(wezterm.run_child_process, {"wsl.exe", "-l", "-q"})
-    
-    if success and wsl_list then
+
+    if success and type(wsl_list) == "string" then
       local wsl_envs = {}
       for line in string.gmatch(wsl_list, '([^\r\n]+)') do
         table.insert(wsl_envs, line)
       end
       return wsl_envs
     else
-      wezterm.log_error("Failed to list WSL distributions")
+      wezterm.log_error("Failed to list WSL distributions or invalid output received")
       return {}
     end
   end
