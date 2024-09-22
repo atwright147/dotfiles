@@ -207,6 +207,8 @@ fi
 
 PATH=${PATH}:$HOME/dotfiles/bin
 
+PATH=${PATH}:$HOME/go/bin
+
 # fix garish, unreadable green and yellow node segment colours
 POWERLEVEL9K_NODE_VERSION_FOREGROUND="black"
 
