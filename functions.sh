@@ -50,3 +50,17 @@ function brew-sizes() {
 		sh -c "brew info {} | egrep '[0-9]* files, ' | sed 's/^.*[0-9]* files, \(.*\)).*$/{} \1/'" | \
 		sort -h -r -k2 - | column -t
 }
+
+function start_docker() {
+	sudo service docker start; 
+
+	# Wait for Docker daemon to start
+	while ! docker info >/dev/null 2>&1; do
+		echo "Waiting for Docker daemon to start..."
+		sleep 1
+	done
+
+	echo "Docker daemon started."
+	return 0  # Return success status (0) to make it chainable
+}
+
