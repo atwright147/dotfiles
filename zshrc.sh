@@ -207,7 +207,19 @@ fi
 
 PATH=${PATH}:$HOME/dotfiles/bin
 
-PATH=${PATH}:$HOME/go/bin
+if [ -d "$HOME/go/bin" ]; then
+	PATH=${PATH}:$HOME/go/bin
+fi
+
+if [ -d "$HOME/sdks/flutter/bin" ]; then
+	PATH=${PATH}:$HOME/sdks/flutter/bin
+fi
+
+# Ruby from Homebrew
+if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
+	export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+	export PATH="$(gem env gemdir)/bin:$PATH"
+fi
 
 # fix garish, unreadable green and yellow node segment colours
 POWERLEVEL9K_NODE_VERSION_FOREGROUND="black"
