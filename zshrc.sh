@@ -251,3 +251,20 @@ zplug load
 
 eval "$(fnm env --use-on-cd)"
 
+
+# Deno Version Manager
+export DVM_DIR="$HOME/.dvm"
+[ -f "$DVM_DIR/dvm.sh" ] && . "$DVM_DIR/dvm.sh"
+[ -f "$DVM_DIR/bash_completion" ] && . "$DVM_DIR/bash_completion"
+
+
+# pnpm
+export PNPM_HOME="/Users/andy/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/andy/.lmstudio/bin"
