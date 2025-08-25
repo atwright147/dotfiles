@@ -6,3 +6,5 @@ end
 set -gx PATH $PATH /Users/andy/.lmstudio/bin
 
 oh-my-posh init fish --config ~/.config/fish/prompt.omp.json | source
+zoxide init fish | source
+
