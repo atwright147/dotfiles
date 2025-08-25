@@ -39,3 +39,5 @@ Set-PSReadLineOption -AddToHistoryHandler {
     # Add any other checks you want
     return $true
 }
+
+Set-Alias ls -Value eza.exe
