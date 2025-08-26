@@ -1,4 +1,4 @@
-oh-my-posh init pwsh | Invoke-Expression
+oh-my-posh init pwsh --config ~/dotfiles/prompt.omp.json | Invoke-Expression
 fnm env --use-on-cd | Out-String | Invoke-Expression
 
 Import-Module -Name Terminal-Icons

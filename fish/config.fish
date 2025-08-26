@@ -5,6 +5,6 @@ end
 # Added by LM Studio CLI (lms)
 set -gx PATH $PATH /Users/andy/.lmstudio/bin
 
-oh-my-posh init fish --config ~/.config/fish/prompt.omp.json | source
+oh-my-posh init fish --config ~/dotfiles/prompt.omp.json | source
 zoxide init fish | source
 
