@@ -483,6 +483,8 @@
 			<string>E18FC4BC-E767-45F5-A047-BD0B05DF1898</string>
 			<key>Horizontal Spacing</key>
 			<real>0.88</real>
+			<key>Icon</key>
+			<integer>0</integer>
 			<key>Idle Code</key>
 			<integer>0</integer>
 			<key>Jobs to Ignore</key>
@@ -911,6 +913,8 @@
 			<array/>
 			<key>Terminal Type</key>
 			<string>xterm-256color</string>
+			<key>Title Components</key>
+			<integer>0</integer>
 			<key>Transparency</key>
 			<real>0.0</real>
 			<key>Unlimited Scrollback</key>
