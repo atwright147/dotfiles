@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
   "transient_prompt": {
-    "template": "❯",
+    "template": "❯ ",
     "foreground": "#5FD700",
     "background": "transparent"
   },
