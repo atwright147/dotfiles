@@ -33,7 +33,7 @@
           "properties": {
             "home_icon": "~",
             "prefix": " \uf07c ",
-            "style": "full"
+            "style": "letter"
           },
           "foreground": "#e4e4e4",
           "powerline_symbol": "\ue0b0",
