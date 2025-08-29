@@ -139,7 +139,7 @@
           "style": "powerline",
           "powerline_symbol": "\ue0b2",
           "invert_powerline": true,
-          "foreground": "#ffffff",
+          "foreground": "#0C0C0C",
           "background": "#7FD5EA",
           "template": " \ue626 {{ .Full }} "
         },
