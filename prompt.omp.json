@@ -162,20 +162,6 @@
           "template": " \ue608 {{ .Full }} "
         },
         {
-          "type": "shell",
-          "style": "powerline",
-          "powerline_symbol": "\ue0b2",
-          "invert_powerline": true,
-          "foreground": "#ffffff",
-          "background": "#1e1e1e",
-          "template": "{{ if eq .Name \"deno\" }} \ue628 {{ .Full }} {{ end }}",
-          "properties": {
-            "mapped_shell_names": {
-              "deno": "deno"
-            }
-          }
-        },
-        {
           "properties": {
             "postfix": " \uf017 ",
             "time_format": "15:04:05"
