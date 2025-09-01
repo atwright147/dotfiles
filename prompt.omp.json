@@ -5,7 +5,7 @@
     "foreground": "#5FD700",
     "background": "transparent"
   },
-  "console_title_template": "{{ .Folder }}",
+  "console_title_template": "{{ .PWD | dir | base }}/{{ .Folder }}",
   "blocks": [
     {
       "type": "prompt",
@@ -33,7 +33,7 @@
           "properties": {
             "home_icon": "~",
             "prefix": " \uf07c ",
-            "style": "full"
+            "style": "letter"
           },
           "foreground": "#e4e4e4",
           "powerline_symbol": "\ue0b0",
@@ -108,6 +108,56 @@
           "type": "root",
           "style": "powerline",
           "invert_powerline": true
+        },
+        {
+          "type": "node",
+          "style": "powerline",
+          "powerline_symbol": "\ue0b2",
+          "invert_powerline": true,
+          "foreground": "#ffffff",
+          "background": "#6CA35E",
+          "template": " \ue718 {{ .Full }}{{ if .PackageManagerIcon }} {{ .PackageManagerIcon }}{{ end }} ",
+          "properties": {
+            "fetch_package_manager": true,
+            "npm_icon": "\ue71e",
+            "yarn_icon": "\uf61a"
+          }
+        },
+        {
+          "type": "python",
+          "style": "powerline",
+          "powerline_symbol": "\ue0b2",
+          "invert_powerline": true,
+          "foreground": "#ffffff",
+          "background": "#306998",
+          "template": " \ue235 {{ .Full }}{{ if .Venv }} \uf10c {{ .Venv }}{{ end }} "
+        },
+        {
+          "type": "go",
+          "style": "powerline",
+          "powerline_symbol": "\ue0b2",
+          "invert_powerline": true,
+          "foreground": "#0C0C0C",
+          "background": "#7FD5EA",
+          "template": " \ue626 {{ .Full }} "
+        },
+        {
+          "type": "dotnet",
+          "style": "powerline",
+          "powerline_symbol": "\ue0b2",
+          "invert_powerline": true,
+          "foreground": "#ffffff",
+          "background": "#5C2D91",
+          "template": " \ue77f {{ .Full }} "
+        },
+        {
+          "type": "php",
+          "style": "powerline",
+          "powerline_symbol": "\ue0b2",
+          "invert_powerline": true,
+          "foreground": "#ffffff",
+          "background": "#4F5D95",
+          "template": " \ue608 {{ .Full }} "
         },
         {
           "properties": {
