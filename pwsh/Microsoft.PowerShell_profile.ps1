@@ -40,8 +40,9 @@ Set-PSReadLineOption -AddToHistoryHandler {
     return $true
 }
 
-Set-Alias ls -Value "la -la"
+Set-Alias ls -Value eza.exe
 Set-Alias l -Value "ls -l"
+Set-Alias la -Value "ls -la"
 
 # Create directory and change into it
 Function Invoke-TakeDirectory {
