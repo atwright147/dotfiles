@@ -54,8 +54,18 @@ Function Invoke-Ls {
 }
 Set-Alias ls Invoke-Ls
 
-Set-Alias l -Value "ls -l"
-Set-Alias la -Value "ls -la"
+# Create functions for the different ls variants
+Function Invoke-LsList {
+    Invoke-Ls -l
+}
+
+Function Invoke-LsListAll {
+    Invoke-Ls -la
+}
+
+# Set aliases to these functions
+Set-Alias l Invoke-LsList
+Set-Alias la Invoke-LsListAll
 
 # Create directory and change into it
 Function Invoke-TakeDirectory {
