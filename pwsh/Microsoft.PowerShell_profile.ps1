@@ -40,7 +40,20 @@ Set-PSReadLineOption -AddToHistoryHandler {
     return $true
 }
 
-Set-Alias ls -Value eza.exe
+Function Invoke-Ls {
+    param(
+        [Parameter(ValueFromRemainingArguments=$true)]
+        [string[]]$Arguments
+    )
+
+    if (Get-Command eza -ErrorAction SilentlyContinue) {
+        & eza @Arguments
+    } else {
+        Get-ChildItem @Arguments
+    }
+}
+Set-Alias ls Invoke-Ls
+
 Set-Alias l -Value "ls -l"
 Set-Alias la -Value "ls -la"
 
