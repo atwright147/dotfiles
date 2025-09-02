@@ -40,4 +40,22 @@ Set-PSReadLineOption -AddToHistoryHandler {
     return $true
 }
 
-Set-Alias ls -Value eza.exe
+Set-Alias ls -Value "la -la"
+Set-Alias l -Value "ls -l"
+
+# Create directory and change into it
+Function Invoke-TakeDirectory {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$Path
+    )
+
+    if (-not $Path) {
+        Write-Host "Usage: tkdir <directory>"
+        return
+    }
+
+    New-Item -ItemType Directory -Path $Path -Force
+    Set-Location $Path
+}
+Set-Alias tkdir Invoke-TakeDirectory
