@@ -49,7 +49,47 @@ Function Invoke-Ls {
     if (Get-Command eza -ErrorAction SilentlyContinue) {
         & eza @Arguments
     } else {
-        Get-ChildItem @Arguments
+        # Convert common ls flags to Get-ChildItem parameters
+        $gciParams = @{}
+        $paths = @()
+        
+        foreach ($arg in $Arguments) {
+            switch ($arg) {
+                '-l' { 
+                    # -l flag: show detailed list (handled by Format-Table later)
+                    $gciParams['Force'] = $false  # placeholder
+                }
+                '-a' { 
+                    # -a flag: show hidden files
+                    $gciParams['Force'] = $true 
+                }
+                '-la' { 
+                    # -la flag: show detailed list with hidden files
+                    $gciParams['Force'] = $true 
+                }
+                default { 
+                    # Treat as path if it doesn't start with -
+                    if (-not $arg.StartsWith('-')) {
+                        $paths += $arg
+                    }
+                }
+            }
+        }
+        
+        # If no paths specified, use current directory
+        if ($paths.Count -eq 0) {
+            $paths = @('.')
+        }
+        
+        # Get the items
+        $items = Get-ChildItem @gciParams -Path $paths
+        
+        # Check if we need detailed output (like ls -l)
+        if ($Arguments -contains '-l' -or $Arguments -contains '-la') {
+            $items | Format-Table Mode, LastWriteTime, Length, Name -AutoSize
+        } else {
+            $items
+        }
     }
 }
 Set-Alias ls Invoke-Ls
