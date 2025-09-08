@@ -3,7 +3,6 @@ fnm env --use-on-cd | Out-String | Invoke-Expression
 
 Import-Module -Name Terminal-Icons
 Import-Module -Name PSReadline
-Import-Module -Name Z
 Import-Module -Name Npm-Completion
 
 Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
@@ -52,22 +51,22 @@ Function Invoke-Ls {
         # Convert common ls flags to Get-ChildItem parameters
         $gciParams = @{}
         $paths = @()
-        
+
         foreach ($arg in $Arguments) {
             switch ($arg) {
-                '-l' { 
+                '-l' {
                     # -l flag: show detailed list (handled by Format-Table later)
                     $gciParams['Force'] = $false  # placeholder
                 }
-                '-a' { 
+                '-a' {
                     # -a flag: show hidden files
-                    $gciParams['Force'] = $true 
+                    $gciParams['Force'] = $true
                 }
-                '-la' { 
+                '-la' {
                     # -la flag: show detailed list with hidden files
-                    $gciParams['Force'] = $true 
+                    $gciParams['Force'] = $true
                 }
-                default { 
+                default {
                     # Treat as path if it doesn't start with -
                     if (-not $arg.StartsWith('-')) {
                         $paths += $arg
@@ -75,15 +74,15 @@ Function Invoke-Ls {
                 }
             }
         }
-        
+
         # If no paths specified, use current directory
         if ($paths.Count -eq 0) {
             $paths = @('.')
         }
-        
+
         # Get the items
         $items = Get-ChildItem @gciParams -Path $paths
-        
+
         # Check if we need detailed output (like ls -l)
         if ($Arguments -contains '-l' -or $Arguments -contains '-la') {
             $items | Format-Table Mode, LastWriteTime, Length, Name -AutoSize
@@ -123,3 +122,5 @@ Function Invoke-TakeDirectory {
     Set-Location $Path
 }
 Set-Alias tkdir Invoke-TakeDirectory
+
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
