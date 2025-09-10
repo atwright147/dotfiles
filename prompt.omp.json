@@ -165,20 +165,9 @@
             "time_format": "15:04:05"
           },
           "foreground": "#0C0C0C",
-          "powerline_symbol": "\ue0b2",
-          "invert_powerline": true,
           "background": "#CCCCCC",
           "type": "time",
-          "style": "powerline"
-        },
-        {
-          "properties": {
-            "postfix": "",
-            "prefix": "",
-            "text": ""
-          },
-          "type": "text",
-          "style": "powerline"
+          "style": "diamond"
         }
       ]
     }
