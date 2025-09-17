@@ -124,3 +124,17 @@ Function Invoke-TakeDirectory {
 Set-Alias tkdir Invoke-TakeDirectory
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
+
+Function Invoke-Cat {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]]$Arguments
+    )
+
+    if (Get-Command bat -ErrorAction SilentlyContinue) {
+        & bat @Arguments
+    } else {
+        & cat @Arguments
+    }
+}
+Set-Alias cat Invoke-Cat
