@@ -138,3 +138,35 @@ Function Invoke-Cat {
     }
 }
 Set-Alias cat Invoke-Cat
+
+Function Invoke-HubOrGit {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]]$Arguments
+    )
+
+    if (Get-Command hub -ErrorAction SilentlyContinue) {
+        & hub @Arguments
+    } else {
+        & git.exe @Arguments
+    }
+}
+Set-Alias git Invoke-HubOrGit
+
+Function Invoke-GitShortcut {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]]$Arguments
+    )
+
+    if ($Arguments.Count -gt 0) {
+        if (Get-Command hub -ErrorAction SilentlyContinue) {
+            & hub @Arguments
+        } else {
+            & git.exe @Arguments
+        }
+    } else {
+        & git.exe status --short
+    }
+}
+Set-Alias g Invoke-GitShortcut
