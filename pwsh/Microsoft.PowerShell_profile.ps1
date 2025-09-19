@@ -123,6 +123,27 @@ Function Invoke-TakeDirectory {
 }
 Set-Alias tkdir Invoke-TakeDirectory
 
+# Navigate up directories: 'up' for one level, 'up N' for N levels
+Function Invoke-Up {
+    param(
+        [Parameter(Position=0)]
+        [int]$Levels = 1
+    )
+
+    if ($Levels -lt 1) {
+        Write-Host "Usage: up [number of levels]"
+        return
+    }
+
+    $path = ""
+    for ($i = 1; $i -le $Levels; $i++) {
+        $path += "../"
+    }
+
+    Set-Location $path
+}
+Set-Alias up Invoke-Up
+
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 Function Invoke-Cat {
