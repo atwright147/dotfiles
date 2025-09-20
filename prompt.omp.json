@@ -33,7 +33,20 @@
           "properties": {
             "home_icon": "~",
             "prefix": " \uf07c ",
-            "style": "letter"
+            "style": "letter",
+            "mapped_locations": {
+              "~/Developer": "\uef70",
+              "~/Development": "\uef70",
+              "~/Git": "\uef70",
+              "C:/Git": "\uef70",
+              "~/Pictures": "\uf03e",
+              "~/Downloads": "\uf019",
+              "~/Documents": "\uf02d",
+              "~/Music": "\uf001",
+              "~/Videos": "\uf03d",
+              "~/Movies": "\uf03d",
+              "~/Projects": "\udb80\udcd6"
+            }
           },
           "foreground": "#e4e4e4",
           "powerline_symbol": "\ue0b0",
