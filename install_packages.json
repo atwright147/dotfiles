@@ -1,0 +1,43 @@
+{
+  "macOS": {
+    "pkg": [
+      "bat",
+      "fish",
+      "git",
+      "bat",
+      "hub",
+      "zoxide",
+      "fd",
+      "oh-my-posh"
+    ],
+    "cargo": [
+      "eza",
+      "fnm"
+    ]
+  },
+  "Windows": {
+    "pkg": [
+      "sharkdp.bat",
+      "sharkdp.fd",
+      "Microsoft.PowerShell",
+      "Git.Git",
+      "JanDeDobbeleer.OhMyPosh"
+    ]
+  },
+  "Linux": {
+    "pkg": [
+      "bat",
+      "fish",
+      "git",
+      "bat",
+      "hub",
+      "zoxide",
+      "fd",
+      "curl"
+    ],
+    "cargo": [
+      "eza",
+      "fnm"
+    ]
+  }
+}
