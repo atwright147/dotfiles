@@ -32,7 +32,7 @@
       "bat",
       "hub",
       "zoxide",
-      "fd",
+      "fd-find",
       "curl"
     ],
     "cargo": [
