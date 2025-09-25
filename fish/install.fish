@@ -8,4 +8,4 @@ curl -s https://ohmyposh.dev/install.sh | bash -s &
 wait
 echo "oh-my-posh installed successfully!"
 echo "Close this terminal, open a new one, then run the following command to install a nerd font:"
-set_color yellow && echo "oh-my-posh install font firacode"
+set_color yellow && echo "oh-my-posh font install firacode"
