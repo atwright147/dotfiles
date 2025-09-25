@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import json
 import subprocess
 import sys
@@ -40,28 +41,45 @@ def check_and_install_manager(package_manager):
         return False
 
 def check_and_install_cargo():
-    """Checks if Cargo is installed and installs Rust/Cargo silently if needed."""
+    """Checks if Cargo is installed and installs Rust/Cargo silently if needed, then sources env."""
     try:
-        # Check if cargo is already installed
+        # Check if cargo is already installed by running in a subprocess (standard check)
         subprocess.run(["cargo", "--version"], check=True, capture_output=True)
         print("✅ Cargo is already installed.")
         return True
     except (subprocess.CalledProcessError, FileNotFoundError):
-        print("❌ Cargo not found. Installing Rust...")
+        print("❌ Cargo not found. Installing Rust and sourcing environment...")
         try:
-            # Command to install rustup, using the silent mode (-y) for automation.
+            # CORRECTED COMMAND: Use the TILDE (~) for the path and use double quotes.
             # We must pass this as a single string and set shell=True to handle the pipe (|).
-            rustup_command = "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+            # Note: Rustup creates the .cargo/env file *after* it runs, so sourcing immediately may fail.
+            # The most reliable method is to perform the PATH update after installation.
 
-            # Execute the command via the system shell
-            subprocess.run(rustup_command, check=True, shell=True)
+            # --- Phase 1: Install Rust ---
+            install_command = "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+            subprocess.run(install_command, check=True, shell=True)
             print("✅ Rust and Cargo installed.")
+
+            # --- Phase 2: Manually Update Python's PATH ---
+            # Now that Rust is installed, we force a bash shell to source the env file
+            # and print the resulting PATH to update Python's environment.
+
+            # Use Tilde (~) expansion for robustness
+            path_command = "bash -c '. \"$HOME/.cargo/env\" && echo $PATH'"
+
+            # Using 'bash -c' ensures the command is run in an environment that understands 'source'/'dot'
+            new_path = subprocess.run(path_command, shell=True, capture_output=True, text=True, check=True).stdout.strip()
+
+            # Update the PATH in the current Python environment
+            os.environ['PATH'] = new_path
+
+            print(f"✅ Python's OS environment PATH updated. Cargo should now be available.")
             return True
         except subprocess.CalledProcessError as e:
-            print(f"❌ Failed to install Rust/Cargo. Error: {e}")
+            print(f"❌ Failed to install Rust/Cargo or source environment. Error: {e}")
             return False
         except FileNotFoundError:
-            print("❌ Error: 'curl' or 'sh' (shell) not found. Cannot install Rust.")
+            print("❌ Error: 'curl' or 'bash' not found. Cannot install Rust.")
             return False
 
 def install_with_manager(packages, package_manager):
