@@ -8,6 +8,7 @@
       "hub",
       "zoxide",
       "fd",
+      "micro",
       "oh-my-posh"
     ],
     "cargo": [
@@ -33,7 +34,9 @@
       "hub",
       "zoxide",
       "fd-find",
-      "curl"
+      "micro",
+      "curl",
+      "build-essential"
     ],
     "cargo": [
       "eza",
