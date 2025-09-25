@@ -40,19 +40,28 @@ def check_and_install_manager(package_manager):
         return False
 
 def check_and_install_cargo():
-    """Checks if Cargo is installed and installs Rust if needed."""
+    """Checks if Cargo is installed and installs Rust/Cargo silently if needed."""
     try:
+        # Check if cargo is already installed
         subprocess.run(["cargo", "--version"], check=True, capture_output=True)
         print("✅ Cargo is already installed.")
         return True
     except (subprocess.CalledProcessError, FileNotFoundError):
         print("❌ Cargo not found. Installing Rust...")
         try:
-            subprocess.run(["curl", "--proto", "=https", "--tlsv1.2", "-sSf", "https://sh.rustup.rs", "|", "sh"], check=True, shell=True)
+            # Command to install rustup, using the silent mode (-y) for automation.
+            # We must pass this as a single string and set shell=True to handle the pipe (|).
+            rustup_command = "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+
+            # Execute the command via the system shell
+            subprocess.run(rustup_command, check=True, shell=True)
             print("✅ Rust and Cargo installed.")
             return True
         except subprocess.CalledProcessError as e:
             print(f"❌ Failed to install Rust/Cargo. Error: {e}")
+            return False
+        except FileNotFoundError:
+            print("❌ Error: 'curl' or 'sh' (shell) not found. Cannot install Rust.")
             return False
 
 def install_with_manager(packages, package_manager):
