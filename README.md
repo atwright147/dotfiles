@@ -16,7 +16,7 @@ git clone <url_for_this_repo>
 ```
 </li>
 
-<li>Switch to zsh shell:
+<li>Switch to zsh shell (Unix-like systems):
 
 ```sh
 chsh -s /bin/zsh
@@ -31,6 +31,39 @@ cd path/to/dotfiles
 ```
 </li>
 </ol>
+
+## Package Installation
+
+This repository includes a cross-platform package installer (`install_packages.py`) that automatically installs common development tools based on your operating system.
+
+### Usage
+
+**Windows:**
+- Double-click `install_packages.bat` or `install_packages.ps1`
+- Or run in PowerShell: `.\install_packages.ps1`
+- Or run in Command Prompt: `install_packages.bat`
+
+**macOS/Linux:**
+```sh
+python3 install_packages.py
+```
+
+**Requirements:**
+- Python 3.x must be installed
+- Internet connection for downloading packages
+
+The script will automatically detect your OS and install appropriate packages using:
+- **Windows**: WinGet
+- **macOS**: Homebrew
+- **Linux**: APT
+
+### Troubleshooting
+
+If the script window closes immediately on Windows, it usually means:
+1. Python is not installed or not in PATH
+2. There was an error during execution
+
+Use the `.bat` or `.ps1` files instead of running the Python script directly - they provide better error messages and won't close immediately.
 
 ## Mac Setup
 
@@ -101,7 +134,7 @@ To enable dark mode open `C:\Program Files (x86)\Meld\etc\gtk-3.0` and change:
 gtk-application-prefer-dark-theme=0
 ```
 
-to 
+to
 
 ```ini
 [Settings]

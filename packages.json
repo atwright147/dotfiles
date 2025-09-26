@@ -18,11 +18,17 @@
   },
   "Windows": {
     "pkg": [
-      "sharkdp.bat",
-      "sharkdp.fd",
-      "Microsoft.PowerShell",
+      "ajeetdsouza.zoxide",
+      "ast-grep.ast-grep",
+      "BurntSushi.ripgrep.MSVC",
+      "eza-community.eza",
       "Git.Git",
-      "JanDeDobbeleer.OhMyPosh"
+      "GitHub.hub",
+      "JanDeDobbeleer.OhMyPosh",
+      "junegunn.fzf",
+      "Microsoft.PowerShell",
+      "sharkdp.bat",
+      "sharkdp.fd"
     ]
   },
   "Linux": {

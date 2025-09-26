@@ -18,6 +18,25 @@ def get_os_info():
     else:
         return None, None
 
+def check_package_installed(package, package_manager):
+    """Checks if a package is already installed."""
+    try:
+        if package_manager == "winget":
+            result = subprocess.run(["winget", "list", "--id", package],
+                                  capture_output=True, text=True)
+            return result.returncode == 0 and package in result.stdout
+        elif package_manager == "brew":
+            result = subprocess.run(["brew", "list", package],
+                                  capture_output=True, text=True)
+            return result.returncode == 0
+        elif package_manager == "apt":
+            result = subprocess.run(["dpkg", "-l", package],
+                                  capture_output=True, text=True)
+            return result.returncode == 0
+    except FileNotFoundError:
+        pass
+    return False
+
 def check_and_install_manager(package_manager):
     """Checks if a package manager is installed and installs it if possible."""
     try:
@@ -38,6 +57,10 @@ def check_and_install_manager(package_manager):
             subprocess.run(["/bin/bash", "-c", "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"], check=True)
             print("✅ Homebrew installed.")
             return True
+        elif package_manager == "winget":
+            print("❌ WinGet is not available. Please update Windows or install the App Installer from Microsoft Store.")
+            print("   You can also install WinGet manually from: https://github.com/microsoft/winget-cli")
+            return False
         return False
 
 def check_and_install_cargo():
@@ -86,6 +109,11 @@ def install_with_manager(packages, package_manager):
     """Installs packages using the specified manager."""
     print(f"\nInstalling packages with {package_manager}...")
     for package in packages:
+        # First check if already installed
+        if check_package_installed(package, package_manager):
+            print(f"  ℹ️  {package} is already installed, skipping...")
+            continue
+
         try:
             print(f"  - Installing {package}...")
             if package_manager == "brew":
@@ -95,10 +123,29 @@ def install_with_manager(packages, package_manager):
             elif package_manager == "apt":
                 command = ["sudo", "apt", "install", "-y", package]
 
-            subprocess.run(command, check=True)
-            print(f"  ✅ Successfully installed {package}")
-        except subprocess.CalledProcessError as e:
-            print(f"  ❌ Failed to install {package}. Error: {e}")
+            result = subprocess.run(command, capture_output=True, text=True)
+
+            # Handle different exit codes
+            if result.returncode == 0:
+                print(f"  ✅ Successfully installed {package}")
+            elif package_manager == "winget" and result.returncode == 1:
+                # WinGet returns 1 when package is already installed
+                print(f"  ℹ️  {package} is already installed (up to date)")
+            elif package_manager == "winget" and result.returncode == -1978335189:
+                # Another common WinGet "already installed" code
+                print(f"  ℹ️  {package} is already installed")
+            else:
+                # Other error codes - let's be more helpful
+                error_msg = result.stderr.strip() if result.stderr else result.stdout.strip()
+                if "already installed" in error_msg.lower() or "no newer package versions" in error_msg.lower():
+                    print(f"  ℹ️  {package} is already up to date")
+                else:
+                    print(f"  ❌ Failed to install {package}. Exit code: {result.returncode}")
+                    if error_msg:
+                        print(f"    Details: {error_msg}")
+
+        except FileNotFoundError:
+            print(f"  ❌ Package manager '{package_manager}' not found. Please install it first.")
             break
 
 def install_cargo_packages(packages):
@@ -115,11 +162,19 @@ def install_cargo_packages(packages):
 
 def main():
     """Main function to run the installation process."""
+    # Change to script directory to ensure we find packages.json
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(script_dir)
+
     try:
         with open("packages.json", "r") as f:
             config = json.load(f)
     except FileNotFoundError:
         print("Error: 'packages.json' not found.")
+        print(f"Current directory: {os.getcwd()}")
+        print("Make sure both install_packages.py and packages.json are in the same directory.")
+        if sys.platform.startswith("win"):
+            input("Press Enter to exit...")
         return
 
     os_key, package_manager = get_os_info()
@@ -137,8 +192,13 @@ def main():
             if check_and_install_cargo():
                 install_cargo_packages(os_config["cargo"])
 
+        print("\n✅ Installation process completed!")
     else:
         print("Unsupported operating system or no package list found.")
+
+    # On Windows, pause before closing when run directly
+    if sys.platform.startswith("win"):
+        input("Press Enter to exit...")
 
 if __name__ == "__main__":
     main()
