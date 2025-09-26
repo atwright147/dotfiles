@@ -9,11 +9,9 @@
       "zoxide",
       "fd",
       "micro",
-      "oh-my-posh"
-    ],
-    "cargo": [
       "eza",
-      "fnm"
+      "fnm",
+      "oh-my-posh"
     ]
   },
   "Windows": {
