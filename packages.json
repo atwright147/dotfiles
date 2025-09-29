@@ -1,0 +1,50 @@
+{
+  "macOS": {
+    "pkg": [
+      "bat",
+      "fish",
+      "git",
+      "bat",
+      "hub",
+      "zoxide",
+      "fd",
+      "micro",
+      "eza",
+      "fnm",
+      "oh-my-posh"
+    ]
+  },
+  "Windows": {
+    "pkg": [
+      "ajeetdsouza.zoxide",
+      "ast-grep.ast-grep",
+      "BurntSushi.ripgrep.MSVC",
+      "eza-community.eza",
+      "Git.Git",
+      "GitHub.hub",
+      "JanDeDobbeleer.OhMyPosh",
+      "junegunn.fzf",
+      "Microsoft.PowerShell",
+      "sharkdp.bat",
+      "sharkdp.fd"
+    ]
+  },
+  "Linux": {
+    "pkg": [
+      "bat",
+      "fish",
+      "git",
+      "bat",
+      "hub",
+      "zoxide",
+      "fd-find",
+      "micro",
+      "curl",
+      "build-essential"
+    ],
+    "cargo": [
+      "eza",
+      "fnm"
+    ]
+  }
+}
