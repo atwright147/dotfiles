@@ -11,7 +11,8 @@
       "micro",
       "eza",
       "fnm",
-      "oh-my-posh"
+      "oh-my-posh",
+      "diff-so-fancy"
     ]
   },
   "Windows": {
@@ -27,6 +28,9 @@
       "Microsoft.PowerShell",
       "sharkdp.bat",
       "sharkdp.fd"
+    ],
+    "manual": [
+      "diff-so-fancy"
     ]
   },
   "Linux": {
@@ -45,6 +49,9 @@
     "cargo": [
       "eza",
       "fnm"
+    ],
+    "manual": [
+      "diff-so-fancy"
     ]
   }
 }

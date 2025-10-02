@@ -160,6 +160,89 @@ def install_cargo_packages(packages):
         except subprocess.CalledProcessError as e:
             print(f"  ❌ Failed to install {package}. Error: {e}")
 
+def check_manual_package_installed(package):
+    """Checks if a manually installed package is available in PATH."""
+    try:
+        result = subprocess.run([package, "--version"], capture_output=True, text=True)
+        return result.returncode == 0
+    except FileNotFoundError:
+        return False
+
+def install_diff_so_fancy():
+    """Downloads and installs diff-so-fancy directly."""
+    try:
+        import urllib.request
+        import stat
+        
+        # Determine the appropriate installation directory
+        os_name = platform.system()
+        if os_name == "Windows":
+            # For Windows, install to a directory that should be in PATH
+            install_dir = os.path.expanduser("~\\AppData\\Local\\Programs\\diff-so-fancy")
+            executable_name = "diff-so-fancy.bat"
+            script_name = "diff-so-fancy"
+        else:
+            # For macOS/Linux, try /usr/local/bin first, then ~/.local/bin
+            if os.access("/usr/local/bin", os.W_OK):
+                install_dir = "/usr/local/bin"
+            else:
+                install_dir = os.path.expanduser("~/.local/bin")
+            executable_name = "diff-so-fancy"
+            script_name = "diff-so-fancy"
+        
+        # Create directory if it doesn't exist
+        os.makedirs(install_dir, exist_ok=True)
+        
+        # Download the script
+        url = "https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy"
+        script_path = os.path.join(install_dir, script_name)
+        
+        print(f"    Downloading diff-so-fancy to {script_path}...")
+        urllib.request.urlretrieve(url, script_path)
+        
+        # Make executable on Unix-like systems
+        if os_name != "Windows":
+            os.chmod(script_path, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
+            
+            # Add ~/.local/bin to PATH suggestion if that's where we installed it
+            if install_dir == os.path.expanduser("~/.local/bin"):
+                print(f"    ⚠️  Note: Make sure {install_dir} is in your PATH")
+                print(f"    You can add this to your shell config: export PATH=\"$HOME/.local/bin:$PATH\"")
+        else:
+            # For Windows, create a batch file wrapper
+            bat_path = os.path.join(install_dir, executable_name)
+            with open(bat_path, 'w') as f:
+                f.write(f'@echo off\nperl "{script_path}" %*\n')
+            
+            print(f"    ⚠️  Note: Make sure {install_dir} is in your PATH")
+            print(f"    Also ensure Perl is installed for diff-so-fancy to work")
+        
+        return True
+        
+    except Exception as e:
+        print(f"    ❌ Manual installation failed: {e}")
+        return False
+
+def install_manual_packages(packages):
+    """Installs packages that require manual installation."""
+    print("\nInstalling manual packages...")
+    for package in packages:
+        # Check if already installed
+        if check_manual_package_installed(package):
+            print(f"  ℹ️  {package} is already installed, skipping...")
+            continue
+            
+        print(f"  - Installing {package} manually...")
+        
+        if package == "diff-so-fancy":
+            if install_diff_so_fancy():
+                print(f"  ✅ Successfully installed {package}")
+            else:
+                print(f"  ❌ Failed to install {package}")
+        else:
+            print(f"  ❌ Manual installation not implemented for {package}")
+            print(f"    Please install {package} manually")
+
 def main():
     """Main function to run the installation process."""
     # Change to script directory to ensure we find packages.json
@@ -191,6 +274,10 @@ def main():
         if "cargo" in os_config:
             if check_and_install_cargo():
                 install_cargo_packages(os_config["cargo"])
+
+        # Install packages manually
+        if "manual" in os_config:
+            install_manual_packages(os_config["manual"])
 
         print("\n✅ Installation process completed!")
     else:
