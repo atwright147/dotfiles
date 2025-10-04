@@ -173,7 +173,7 @@ def install_diff_so_fancy():
     try:
         import urllib.request
         import stat
-        
+
         # Determine the appropriate installation directory
         os_name = platform.system()
         if os_name == "Windows":
@@ -189,21 +189,21 @@ def install_diff_so_fancy():
                 install_dir = os.path.expanduser("~/.local/bin")
             executable_name = "diff-so-fancy"
             script_name = "diff-so-fancy"
-        
+
         # Create directory if it doesn't exist
         os.makedirs(install_dir, exist_ok=True)
-        
+
         # Download the script
-        url = "https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/third_party/build_fatpack/diff-so-fancy"
+        url = "https://raw.githubusercontent.com/so-fancy/diff-so-fancy/master/diff-so-fancy"
         script_path = os.path.join(install_dir, script_name)
-        
+
         print(f"    Downloading diff-so-fancy to {script_path}...")
         urllib.request.urlretrieve(url, script_path)
-        
+
         # Make executable on Unix-like systems
         if os_name != "Windows":
             os.chmod(script_path, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
-            
+
             # Add ~/.local/bin to PATH suggestion if that's where we installed it
             if install_dir == os.path.expanduser("~/.local/bin"):
                 print(f"    ⚠️  Note: Make sure {install_dir} is in your PATH")
@@ -213,12 +213,12 @@ def install_diff_so_fancy():
             bat_path = os.path.join(install_dir, executable_name)
             with open(bat_path, 'w') as f:
                 f.write(f'@echo off\nperl "{script_path}" %*\n')
-            
+
             print(f"    ⚠️  Note: Make sure {install_dir} is in your PATH")
             print(f"    Also ensure Perl is installed for diff-so-fancy to work")
-        
+
         return True
-        
+
     except Exception as e:
         print(f"    ❌ Manual installation failed: {e}")
         return False
@@ -231,9 +231,9 @@ def install_manual_packages(packages):
         if check_manual_package_installed(package):
             print(f"  ℹ️  {package} is already installed, skipping...")
             continue
-            
+
         print(f"  - Installing {package} manually...")
-        
+
         if package == "diff-so-fancy":
             if install_diff_so_fancy():
                 print(f"  ✅ Successfully installed {package}")
