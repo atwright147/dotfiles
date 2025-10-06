@@ -11,7 +11,8 @@
       "micro",
       "eza",
       "fnm",
-      "oh-my-posh"
+      "oh-my-posh",
+      "git-delta"
     ]
   },
   "Windows": {
@@ -26,7 +27,8 @@
       "junegunn.fzf",
       "Microsoft.PowerShell",
       "sharkdp.bat",
-      "sharkdp.fd"
+      "sharkdp.fd",
+      "dandavison.delta"
     ]
   },
   "Linux": {
@@ -44,7 +46,8 @@
     ],
     "cargo": [
       "eza",
-      "fnm"
+      "fnm",
+      "git-delta"
     ]
   }
 }

@@ -1,0 +1,17 @@
+[init]
+  defaultBranch = main
+[user]
+  name = Andy Wright
+  email = atwright147@gmail.com
+[status]
+  branch = true
+[branch]
+  sort = -committerdate
+[column]
+  ui = auto
+[tag]
+  sort = -version:refname
+[core]
+  pager = delta --diff-so-fancy | less --tabs=4 -RF
+[interactive]
+  diffFilter = delta --diff-so-fancy --patch
