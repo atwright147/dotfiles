@@ -109,11 +109,6 @@ def install_with_manager(packages, package_manager):
     """Installs packages using the specified manager."""
     print(f"\nInstalling packages with {package_manager}...")
     for package in packages:
-        # First check if already installed
-        if check_package_installed(package, package_manager):
-            print(f"  ℹ️  {package} is already installed, skipping...")
-            continue
-
         try:
             print(f"  - Installing {package}...")
             if package_manager == "brew":
