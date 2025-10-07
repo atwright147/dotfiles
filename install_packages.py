@@ -155,6 +155,44 @@ def install_cargo_packages(packages):
         except subprocess.CalledProcessError as e:
             print(f"  ❌ Failed to install {package}. Error: {e}")
 
+def install_oh_my_posh():
+    """Installs oh-my-posh using the official installation script for Linux."""
+    print("\nInstalling oh-my-posh...")
+    try:
+        # Download and install oh-my-posh using the official script
+        command = "curl -s https://ohmyposh.dev/install.sh | bash -s"
+        subprocess.run(command, shell=True, check=True)
+        print("✅ oh-my-posh installed successfully")
+
+        # Add oh-my-posh to PATH in shell rc files if needed
+        home = os.path.expanduser("~")
+        shell_files = [
+            os.path.join(home, ".bashrc"),
+            os.path.join(home, ".zshrc")
+        ]
+
+        omp_path = '/usr/local/bin'
+        path_export = f'export PATH="{omp_path}:$PATH"'
+
+        for shell_file in shell_files:
+            if os.path.exists(shell_file):
+                with open(shell_file, "r") as f:
+                    content = f.read()
+
+                # Check if PATH is already configured for oh-my-posh
+                if omp_path not in content and "oh-my-posh" not in content:
+                    with open(shell_file, "a") as f:
+                        f.write(f'\n# Added by dotfiles installer for oh-my-posh\n{path_export}\n')
+                    print(f"✅ Added oh-my-posh to PATH in {shell_file}")
+
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to install oh-my-posh. Error: {e}")
+        return False
+    except FileNotFoundError:
+        print("❌ Error: 'curl' or 'bash' not found. Cannot install oh-my-posh.")
+        return False
+
 def main():
     """Main function to run the installation process."""
     # Change to script directory to ensure we find packages.json
@@ -186,6 +224,10 @@ def main():
         if "cargo" in os_config:
             if check_and_install_cargo():
                 install_cargo_packages(os_config["cargo"])
+
+        # Install oh-my-posh on Linux only
+        if os_key == "Linux" and "oh_my_posh" in os_config and os_config["oh_my_posh"]:
+            install_oh_my_posh()
 
         print("\n✅ Installation process completed!")
     else:

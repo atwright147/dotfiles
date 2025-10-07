@@ -48,6 +48,7 @@
       "eza",
       "fnm",
       "git-delta"
-    ]
+    ],
+    "oh_my_posh": true
   }
 }
