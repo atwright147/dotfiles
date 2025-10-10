@@ -196,6 +196,11 @@ def install_oh_my_posh_linux():
 def install_omp_font(os_key):
     """Installs FiraCode font using oh-my-posh for all platforms."""
     print("\nInstalling FiraCode font...")
+
+    # Add a small delay to ensure package installation has completed
+    import time
+    time.sleep(2)
+
     try:
         # Prepare environment based on OS
         updated_env = os.environ.copy()
@@ -204,17 +209,48 @@ def install_omp_font(os_key):
             # Update PATH for current session to include oh-my-posh
             omp_path = '/usr/local/bin'
             updated_env['PATH'] = f"{omp_path}:{updated_env.get('PATH', '')}"
+        elif os_key == "macOS":
+            # Add common Homebrew paths for oh-my-posh
+            homebrew_paths = ['/opt/homebrew/bin', '/usr/local/bin']
+            current_path = updated_env.get('PATH', '')
+            for path in homebrew_paths:
+                if path not in current_path:
+                    updated_env['PATH'] = f"{path}:{current_path}"
+                    current_path = updated_env['PATH']
+        elif os_key == "Windows":
+            # On Windows, try to refresh PATH or find oh-my-posh in common locations
+            possible_paths = [
+                os.path.expanduser("~\\AppData\\Local\\Programs\\oh-my-posh\\bin"),
+                "C:\\Program Files\\oh-my-posh\\bin"
+            ]
+            current_path = updated_env.get('PATH', '')
+            for path in possible_paths:
+                if os.path.exists(path) and path not in current_path:
+                    updated_env['PATH'] = f"{path};{current_path}"
+                    break
 
-        subprocess.run(["oh-my-posh", "font", "install", "firacode"],
-                     check=True, env=updated_env)
-        print("✅ FiraCode font installed successfully")
-        return True
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Failed to install FiraCode font. Error: {e}")
-        print("You can install it manually later with: oh-my-posh font install firacode")
-        return False
+        # Try to run oh-my-posh font install
+        result = subprocess.run(["oh-my-posh", "font", "install", "firacode"],
+                              capture_output=True, text=True, env=updated_env)
+
+        if result.returncode == 0:
+            print("✅ FiraCode font installed successfully")
+            return True
+        else:
+            # If it fails, provide helpful message
+            print(f"❌ Failed to install FiraCode font. Exit code: {result.returncode}")
+            if result.stderr:
+                print(f"    Error: {result.stderr.strip()}")
+            print("You can install it manually later with: oh-my-posh font install firacode")
+            return False
+
     except FileNotFoundError:
         print("❌ Error: 'oh-my-posh' command not found. Make sure oh-my-posh is installed and in PATH.")
+        print("You can install it manually later with: oh-my-posh font install firacode")
+        return False
+    except Exception as e:
+        print(f"❌ Unexpected error installing font: {e}")
+        print("You can install it manually later with: oh-my-posh font install firacode")
         return False
 
 def main():
