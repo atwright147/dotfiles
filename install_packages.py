@@ -155,7 +155,7 @@ def install_cargo_packages(packages):
         except subprocess.CalledProcessError as e:
             print(f"  ❌ Failed to install {package}. Error: {e}")
 
-def install_oh_my_posh():
+def install_oh_my_posh_linux():
     """Installs oh-my-posh using the official installation script for Linux."""
     print("\nInstalling oh-my-posh...")
     try:
@@ -193,6 +193,30 @@ def install_oh_my_posh():
         print("❌ Error: 'curl' or 'bash' not found. Cannot install oh-my-posh.")
         return False
 
+def install_omp_font(os_key):
+    """Installs FiraCode font using oh-my-posh for all platforms."""
+    print("\nInstalling FiraCode font...")
+    try:
+        # Prepare environment based on OS
+        updated_env = os.environ.copy()
+
+        if os_key == "Linux":
+            # Update PATH for current session to include oh-my-posh
+            omp_path = '/usr/local/bin'
+            updated_env['PATH'] = f"{omp_path}:{updated_env.get('PATH', '')}"
+
+        subprocess.run(["oh-my-posh", "font", "install", "firacode"],
+                     check=True, env=updated_env)
+        print("✅ FiraCode font installed successfully")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to install FiraCode font. Error: {e}")
+        print("You can install it manually later with: oh-my-posh font install firacode")
+        return False
+    except FileNotFoundError:
+        print("❌ Error: 'oh-my-posh' command not found. Make sure oh-my-posh is installed and in PATH.")
+        return False
+
 def main():
     """Main function to run the installation process."""
     # Change to script directory to ensure we find packages.json
@@ -227,7 +251,19 @@ def main():
 
         # Install oh-my-posh on Linux only
         if os_key == "Linux" and "oh_my_posh" in os_config and os_config["oh_my_posh"]:
-            install_oh_my_posh()
+            install_oh_my_posh_linux()
+
+        # Install FiraCode font for oh-my-posh on all platforms (after packages are installed)
+        omp_installed = False
+        if os_key == "Linux" and "oh_my_posh" in os_config and os_config["oh_my_posh"]:
+            omp_installed = True
+        elif os_key in ["macOS", "Windows"] and "pkg" in os_config:
+            # Check if oh-my-posh is in the package list
+            omp_packages = ["oh-my-posh", "JanDeDobbeleer.OhMyPosh"]
+            omp_installed = any(pkg in os_config["pkg"] for pkg in omp_packages)
+
+        if omp_installed:
+            install_omp_font(os_key)
 
         print("\n✅ Installation process completed!")
     else:
