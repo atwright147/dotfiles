@@ -171,7 +171,7 @@ def install_oh_my_posh_linux():
             os.path.join(home, ".zshrc")
         ]
 
-        omp_path = '/usr/local/bin'
+        omp_path = os.path.join(home, '.local/bin')
         path_export = f'export PATH="{omp_path}:$PATH"'
 
         for shell_file in shell_files:
@@ -207,7 +207,8 @@ def install_omp_font(os_key):
 
         if os_key == "Linux":
             # Update PATH for current session to include oh-my-posh
-            omp_path = '/usr/local/bin'
+            home = os.path.expanduser("~")
+            omp_path = os.path.join(home, '.local/bin')
             updated_env['PATH'] = f"{omp_path}:{updated_env.get('PATH', '')}"
         elif os_key == "macOS":
             # Add common Homebrew paths for oh-my-posh
