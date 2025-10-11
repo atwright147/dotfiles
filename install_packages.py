@@ -18,6 +18,24 @@ def get_os_info():
     else:
         return None, None
 
+def is_wsl():
+    """Detects if running in Windows Subsystem for Linux (WSL)."""
+    try:
+        # Check for WSL-specific files/environment variables
+        if os.path.exists('/proc/version'):
+            with open('/proc/version', 'r') as f:
+                version_info = f.read().lower()
+                if 'microsoft' in version_info or 'wsl' in version_info:
+                    return True
+
+        # Check WSL environment variable
+        if os.environ.get('WSL_DISTRO_NAME'):
+            return True
+
+        return False
+    except:
+        return False
+
 def check_package_installed(package, package_manager):
     """Checks if a package is already installed."""
     try:
@@ -196,6 +214,13 @@ def install_oh_my_posh_linux():
 def install_omp_font(os_key):
     """Installs FiraCode font using oh-my-posh for all platforms."""
     print("\nInstalling FiraCode font...")
+
+    # Skip font installation in WSL
+    if os_key == "Linux" and is_wsl():
+        print("⚠️  Skipping font installation in WSL environment")
+        print("   Fonts should be installed from Windows host, not WSL")
+        print("   Run 'oh-my-posh font install firacode' from Windows PowerShell/Command Prompt")
+        return True  # Return True since this is expected behavior
 
     # Add a small delay to ensure package installation has completed
     import time
