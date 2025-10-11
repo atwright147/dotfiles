@@ -229,16 +229,30 @@ def install_omp_font(os_key):
                     updated_env['PATH'] = f"{path}:{current_path}"
                     current_path = updated_env['PATH']
         elif os_key == "Windows":
-            # On Windows, try to refresh PATH or find oh-my-posh in common locations
+            # On Windows, find oh-my-posh installed via WinGet
             possible_paths = [
                 os.path.expanduser("~\\AppData\\Local\\Programs\\oh-my-posh\\bin"),
-                "C:\\Program Files\\oh-my-posh\\bin"
+                "C:\\Program Files\\oh-my-posh\\bin",
+                os.path.expanduser("~\\AppData\\Local\\Microsoft\\WinGet\\Packages\\JanDeDobbeleer.OhMyPosh_Microsoft.Winget.Source_8wekyb3d8bbwe")
             ]
             current_path = updated_env.get('PATH', '')
+            omp_binary_path = None
+
+            print("  Checking WinGet installation paths for oh-my-posh...")
             for path in possible_paths:
-                if os.path.exists(path) and path not in current_path:
-                    updated_env['PATH'] = f"{path};{current_path}"
+                omp_exe = os.path.join(path, 'oh-my-posh.exe')
+                print(f"    Checking: {omp_exe}")
+                if os.path.exists(omp_exe):
+                    print(f"    ✅ Found oh-my-posh.exe at: {path}")
+                    omp_binary_path = omp_exe
+                    if path not in current_path:
+                        updated_env['PATH'] = f"{path};{current_path}"
                     break
+                else:
+                    print(f"    ❌ Not found at: {path}")
+
+            if not omp_binary_path:
+                print("  ❌ oh-my-posh.exe not found in any expected WinGet locations")
 
         # Debug: Show the PATH we're using
         print(f"  Using PATH: {updated_env['PATH'][:100]}...")
