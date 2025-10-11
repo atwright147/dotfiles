@@ -270,19 +270,27 @@ def install_omp_font(os_key):
 
         # Try to run oh-my-posh font install
         print("  Running font installation...")
-        result = subprocess.run(["oh-my-posh", "font", "install", "firacode"],
-                              capture_output=True, text=True, env=updated_env)
+        try:
+            result = subprocess.run(["oh-my-posh", "font", "install", "firacode"],
+                                  capture_output=True, text=True, env=updated_env, timeout=60)
 
-        if result.returncode == 0:
-            print("✅ FiraCode font installed successfully")
-            return True
-        else:
-            # If it fails, provide helpful message
-            print(f"❌ Failed to install FiraCode font. Exit code: {result.returncode}")
-            if result.stderr:
-                print(f"    Error: {result.stderr.strip()}")
+            print(f"  Font installation exit code: {result.returncode}")
             if result.stdout:
-                print(f"    Output: {result.stdout.strip()}")
+                print(f"  Stdout: {result.stdout.strip()}")
+            if result.stderr:
+                print(f"  Stderr: {result.stderr.strip()}")
+
+            if result.returncode == 0:
+                print("✅ FiraCode font installed successfully")
+                return True
+            else:
+                # If it fails, provide helpful message
+                print(f"❌ Failed to install FiraCode font. Exit code: {result.returncode}")
+                print("You can install it manually later with: oh-my-posh font install firacode")
+                return False
+
+        except subprocess.TimeoutExpired:
+            print("❌ Font installation timed out after 60 seconds")
             print("You can install it manually later with: oh-my-posh font install firacode")
             return False
 
@@ -341,9 +349,13 @@ def main():
             omp_installed = any(pkg in os_config["pkg"] for pkg in omp_packages)
 
         if omp_installed:
-            install_omp_font(os_key)
-
-        print("\n✅ Installation process completed!")
+            font_success = install_omp_font(os_key)
+            if not font_success:
+                print("\n⚠️  Installation completed with issues: FiraCode font installation failed")
+            else:
+                print("\n✅ Installation process completed successfully!")
+        else:
+            print("\n✅ Installation process completed!")
     else:
         print("Unsupported operating system or no package list found.")
 
