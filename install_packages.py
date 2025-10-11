@@ -204,12 +204,22 @@ def install_omp_font(os_key):
     try:
         # Prepare environment based on OS
         updated_env = os.environ.copy()
+        omp_binary_path = None
 
         if os_key == "Linux":
             # Update PATH for current session to include oh-my-posh
             home = os.path.expanduser("~")
             omp_path = os.path.join(home, '.local/bin')
+            omp_binary_path = os.path.join(omp_path, 'oh-my-posh')
             updated_env['PATH'] = f"{omp_path}:{updated_env.get('PATH', '')}"
+
+            # Debug: Check if binary exists
+            print(f"  Checking for oh-my-posh at: {omp_binary_path}")
+            if os.path.exists(omp_binary_path):
+                print(f"  ✅ Found oh-my-posh binary")
+            else:
+                print(f"  ❌ oh-my-posh binary not found at expected location")
+
         elif os_key == "macOS":
             # Add common Homebrew paths for oh-my-posh
             homebrew_paths = ['/opt/homebrew/bin', '/usr/local/bin']
@@ -230,7 +240,22 @@ def install_omp_font(os_key):
                     updated_env['PATH'] = f"{path};{current_path}"
                     break
 
+        # Debug: Show the PATH we're using
+        print(f"  Using PATH: {updated_env['PATH'][:100]}...")
+
+        # Try to run oh-my-posh version first to verify it's accessible
+        print("  Checking oh-my-posh accessibility...")
+        version_result = subprocess.run(["oh-my-posh", "--version"],
+                                       capture_output=True, text=True, env=updated_env)
+
+        if version_result.returncode == 0:
+            print(f"  ✅ oh-my-posh is accessible, version: {version_result.stdout.strip()}")
+        else:
+            print(f"  ❌ oh-my-posh version check failed: {version_result.stderr.strip()}")
+            raise FileNotFoundError("oh-my-posh not accessible")
+
         # Try to run oh-my-posh font install
+        print("  Running font installation...")
         result = subprocess.run(["oh-my-posh", "font", "install", "firacode"],
                               capture_output=True, text=True, env=updated_env)
 
@@ -242,10 +267,12 @@ def install_omp_font(os_key):
             print(f"❌ Failed to install FiraCode font. Exit code: {result.returncode}")
             if result.stderr:
                 print(f"    Error: {result.stderr.strip()}")
+            if result.stdout:
+                print(f"    Output: {result.stdout.strip()}")
             print("You can install it manually later with: oh-my-posh font install firacode")
             return False
 
-    except FileNotFoundError:
+    except FileNotFoundError as e:
         print("❌ Error: 'oh-my-posh' command not found. Make sure oh-my-posh is installed and in PATH.")
         print("You can install it manually later with: oh-my-posh font install firacode")
         return False
