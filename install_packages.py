@@ -268,6 +268,44 @@ def install_oh_my_posh_linux():
         print("❌ Error: 'curl' or 'bash' not found. Cannot install oh-my-posh.")
         return False
 
+def install_fish_config():
+    """Installs fish shell configuration by running fish/install.fish script."""
+    print("\nInstalling fish shell configuration...")
+
+    script_path = os.path.join(os.getcwd(), "fish", "install.fish")
+
+    if not os.path.exists(script_path):
+        print(f"❌ Fish install script not found at: {script_path}")
+        return False
+
+    try:
+        # Check if fish is installed
+        fish_check = subprocess.run(["fish", "--version"], capture_output=True, text=True)
+        if fish_check.returncode != 0:
+            print("❌ Fish shell is not installed. Please install fish first.")
+            return False
+
+        print(f"  Running fish install script: {script_path}")
+        result = subprocess.run(["fish", script_path], capture_output=True, text=True)
+
+        if result.returncode == 0:
+            print("✅ Fish shell configuration installed successfully")
+            if result.stdout:
+                print(f"  Output: {result.stdout.strip()}")
+            return True
+        else:
+            print(f"❌ Failed to install fish configuration. Exit code: {result.returncode}")
+            if result.stderr:
+                print(f"  Error: {result.stderr.strip()}")
+            return False
+
+    except FileNotFoundError:
+        print("❌ Fish shell is not installed or not in PATH")
+        return False
+    except Exception as e:
+        print(f"❌ Unexpected error installing fish configuration: {e}")
+        return False
+
 def install_omp_font(os_key):
     """Installs FiraCode font using oh-my-posh for all platforms."""
     print("\nInstalling FiraCode font...")
@@ -421,6 +459,10 @@ def main():
         if "cargo" in os_config:
             if check_and_install_cargo():
                 install_cargo_packages(os_config["cargo"])
+
+        # Install fish shell configuration if on macOS/Linux
+        if os_key in ["macOS", "Linux"]:
+            install_fish_config()
 
         # Install oh-my-posh on Linux only
         if os_key == "Linux" and "oh_my_posh" in os_config and os_config["oh_my_posh"]:
