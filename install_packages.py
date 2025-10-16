@@ -268,45 +268,109 @@ def install_oh_my_posh_linux():
         print("❌ Error: 'curl' or 'bash' not found. Cannot install oh-my-posh.")
         return False
 
+def setup_fish_post_install(os_key):
+    """Set up fish shell after all packages are installed."""
+    print("\nSetting up fish shell post-installation...")
+    
+    try:
+        # Check if fish is available
+        fish_check = subprocess.run(["fish", "--version"], capture_output=True, text=True)
+        if fish_check.returncode != 0:
+            print("❌ Fish shell is not available")
+            return False
+        
+        # Update PATH to include oh-my-posh if it was installed
+        home = os.path.expanduser("~")
+        omp_path = os.path.join(home, '.local/bin')
+        
+        if os.path.exists(os.path.join(omp_path, 'oh-my-posh')):
+            print(f"  ✅ Found oh-my-posh at {omp_path}")
+            
+            # Check if fish config exists and can be sourced
+            fish_config_path = os.path.expanduser("~/.config/fish")
+            if os.path.exists(fish_config_path):
+                print("  ✅ Fish configuration directory exists")
+                
+                # Try to run a simple fish command to verify configuration works
+                test_cmd = f'fish -c "echo \\"Fish configuration test\\""'
+                test_result = subprocess.run(test_cmd, shell=True, capture_output=True, text=True)
+                
+                if test_result.returncode == 0:
+                    print("  ✅ Fish configuration is working")
+                    print("\n🎉 Fish shell setup complete!")
+                    print("⚠️  Please start a new fish shell session or run 'exec fish' to load the new configuration")
+                    print("   Your aliases and functions will be available in the new session")
+                    return True
+                else:
+                    print(f"  ⚠️  Fish configuration test failed: {test_result.stderr.strip()}")
+            else:
+                print(f"  ❌ Fish configuration directory not found at {fish_config_path}")
+        else:
+            print(f"  ⚠️  oh-my-posh not found at {omp_path}")
+            
+        return False
+        
+    except Exception as e:
+        print(f"❌ Error setting up fish shell: {e}")
+        return False
+
 def install_fish_config():
     """Installs fish shell configuration by running fish/install.fish script."""
     print("\nInstalling fish shell configuration...")
-
-    script_path = os.path.join(os.getcwd(), "fish", "install.fish")
-
+    
+    script_dir = os.getcwd()
+    fish_dir = os.path.join(script_dir, "fish")
+    script_path = os.path.join(fish_dir, "install.fish")
+    
     if not os.path.exists(script_path):
         print(f"❌ Fish install script not found at: {script_path}")
         return False
-
+    
     try:
         # Check if fish is installed
         fish_check = subprocess.run(["fish", "--version"], capture_output=True, text=True)
         if fish_check.returncode != 0:
             print("❌ Fish shell is not installed. Please install fish first.")
             return False
-
+        
         print(f"  Running fish install script: {script_path}")
-        result = subprocess.run(["fish", script_path], capture_output=True, text=True)
-
+        # Change to fish directory before running the script to ensure proper symlink creation
+        result = subprocess.run(["fish", script_path], capture_output=True, text=True, cwd=fish_dir)
+        
         if result.returncode == 0:
             print("✅ Fish shell configuration installed successfully")
             if result.stdout:
                 print(f"  Output: {result.stdout.strip()}")
+            
+            # Verify the symlink was created correctly
+            fish_config_path = os.path.expanduser("~/.config/fish")
+            if os.path.islink(fish_config_path):
+                link_target = os.readlink(fish_config_path)
+                print(f"  ✅ Fish config symlinked: {fish_config_path} -> {link_target}")
+            else:
+                print(f"  ⚠️  Fish config symlink verification failed")
+            
+            # Check gitconfig symlink too
+            gitconfig_path = os.path.expanduser("~/.gitconfig")
+            if os.path.islink(gitconfig_path):
+                link_target = os.readlink(gitconfig_path)
+                print(f"  ✅ Gitconfig symlinked: {gitconfig_path} -> {link_target}")
+            else:
+                print(f"  ⚠️  Gitconfig symlink verification failed")
+                
             return True
         else:
             print(f"❌ Failed to install fish configuration. Exit code: {result.returncode}")
             if result.stderr:
                 print(f"  Error: {result.stderr.strip()}")
             return False
-
+            
     except FileNotFoundError:
         print("❌ Fish shell is not installed or not in PATH")
         return False
     except Exception as e:
         print(f"❌ Unexpected error installing fish configuration: {e}")
-        return False
-
-def install_omp_font(os_key):
+        return Falsedef install_omp_font(os_key):
     """Installs FiraCode font using oh-my-posh for all platforms."""
     print("\nInstalling FiraCode font...")
 
@@ -483,8 +547,16 @@ def main():
                 print("\n⚠️  Installation completed with issues: FiraCode font installation failed")
             else:
                 print("\n✅ Installation process completed successfully!")
+                
+            # Set up fish shell after everything is installed
+            if os_key in ["macOS", "Linux"]:
+                setup_fish_post_install(os_key)
         else:
             print("\n✅ Installation process completed!")
+            
+            # Still try to set up fish even if oh-my-posh wasn't installed
+            if os_key in ["macOS", "Linux"]:
+                setup_fish_post_install(os_key)
     else:
         print("Unsupported operating system or no package list found.")
 
