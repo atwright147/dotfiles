@@ -17,7 +17,7 @@ Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 if ($env:OS -match 'Windows_NT') {
     Function Invoke-Fork {
         param($Path)
-        $forkExe = "$env:LOCALAPPDATA\Fork\Fork.exe"
+        $forkExe = "$env:LOCALAPPDATA\Fork\current\Fork.exe"
         if (-not $Path) {
             & $forkExe
         }
