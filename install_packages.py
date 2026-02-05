@@ -5,6 +5,7 @@ import json
 import subprocess
 import sys
 import platform
+import time
 
 def get_os_info():
     """Determines the operating system and returns a key and package manager."""
@@ -268,14 +269,71 @@ def install_oh_my_posh_linux():
         print("❌ Error: 'curl' or 'bash' not found. Cannot install oh-my-posh.")
         return False
 
+def setup_fish_post_install(os_key):
+    """Set up fish shell after all packages are installed."""
+    print("\nSetting up fish shell post-installation...")
+
+    try:
+        # Check if fish is available
+        fish_check = subprocess.run(["fish", "--version"], capture_output=True, text=True)
+        if fish_check.returncode != 0:
+            print("❌ Fish shell is not available")
+            return False
+
+        # Update PATH to include oh-my-posh if it was installed
+        home = os.path.expanduser("~")
+        omp_path = os.path.join(home, '.local/bin')
+
+        if os.path.exists(os.path.join(omp_path, 'oh-my-posh')):
+            print(f"  ✅ Found oh-my-posh at {omp_path}")
+
+            # Check if fish config exists and can be sourced
+            fish_config_path = os.path.expanduser("~/.config/fish")
+            if os.path.exists(fish_config_path):
+                print("  ✅ Fish configuration directory exists")
+
+                # Try to run a simple fish command to verify configuration works
+                test_cmd = f'fish -c "echo \\"Fish configuration test\\""'
+                test_result = subprocess.run(test_cmd, shell=True, capture_output=True, text=True)
+
+                if test_result.returncode == 0:
+                    print("  ✅ Fish configuration is working")
+                    print("\n🎉 Fish shell setup complete!")
+                    print("⚠️  Please start a new fish shell session or run 'exec fish' to load the new configuration")
+                    print("   Your aliases and functions will be available in the new session")
+                    return True
+                else:
+                    print(f"  ⚠️  Fish configuration test failed: {test_result.stderr.strip()}")
+            else:
+                print(f"  ❌ Fish configuration directory not found at {fish_config_path}")
+        else:
+            print(f"  ⚠️  oh-my-posh not found at {omp_path}")
+
+        return False
+
+    except Exception as e:
+        print(f"❌ Error setting up fish shell: {e}")
+        return False
+
 def install_fish_config():
     """Installs fish shell configuration by running fish/install.fish script."""
     print("\nInstalling fish shell configuration...")
 
-    script_path = os.path.join(os.getcwd(), "fish", "install.fish")
+    script_dir = os.getcwd()
+    fish_dir = os.path.join(script_dir, "fish")
+    script_path = os.path.join(fish_dir, "install.fish")
+    gitconfig_path = os.path.join(script_dir, "gitconfig")
+
+    print(f"  Script directory: {script_dir}")
+    print(f"  Fish directory: {fish_dir}")
+    print(f"  Expected gitconfig: {gitconfig_path}")
 
     if not os.path.exists(script_path):
         print(f"❌ Fish install script not found at: {script_path}")
+        return False
+
+    if not os.path.exists(gitconfig_path):
+        print(f"❌ Gitconfig file not found at: {gitconfig_path}")
         return False
 
     try:
@@ -286,147 +344,176 @@ def install_fish_config():
             return False
 
         print(f"  Running fish install script: {script_path}")
-        result = subprocess.run(["fish", script_path], capture_output=True, text=True)
+        # Run the script from the script directory to ensure proper path resolution
+        result = subprocess.run(["fish", script_path], capture_output=True, text=True, cwd=script_dir)
 
         if result.returncode == 0:
             print("✅ Fish shell configuration installed successfully")
             if result.stdout:
                 print(f"  Output: {result.stdout.strip()}")
+
+            # Verify the symlink was created correctly
+            fish_config_path = os.path.expanduser("~/.config/fish")
+            if os.path.islink(fish_config_path):
+                link_target = os.readlink(fish_config_path)
+                expected_target = fish_dir
+                print(f"  ✅ Fish config symlinked: {fish_config_path} -> {link_target}")
+                if os.path.abspath(link_target) != os.path.abspath(expected_target):
+                    print(f"  ⚠️  Warning: Link target doesn't match expected path")
+                    print(f"      Expected: {expected_target}")
+                    print(f"      Actual: {link_target}")
+            else:
+                print(f"  ❌ Fish config symlink not found at {fish_config_path}")
+
+            # Check gitconfig symlink too
+            gitconfig_link_path = os.path.expanduser("~/.gitconfig")
+            if os.path.islink(gitconfig_link_path):
+                link_target = os.readlink(gitconfig_link_path)
+                expected_target = gitconfig_path
+                print(f"  ✅ Gitconfig symlinked: {gitconfig_link_path} -> {link_target}")
+                if os.path.abspath(link_target) != os.path.abspath(expected_target):
+                    print(f"  ⚠️  Warning: Gitconfig link target doesn't match expected path")
+                    print(f"      Expected: {expected_target}")
+                    print(f"      Actual: {link_target}")
+            else:
+                print(f"  ❌ Gitconfig symlink not found at {gitconfig_link_path}")
+
             return True
         else:
             print(f"❌ Failed to install fish configuration. Exit code: {result.returncode}")
             if result.stderr:
                 print(f"  Error: {result.stderr.strip()}")
+            if result.stdout:
+                print(f"  Output: {result.stdout.strip()}")
             return False
-
     except FileNotFoundError:
         print("❌ Fish shell is not installed or not in PATH")
         return False
     except Exception as e:
         print(f"❌ Unexpected error installing fish configuration: {e}")
         return False
+            return False
 
-def install_omp_font(os_key):
-    """Installs FiraCode font using oh-my-posh for all platforms."""
-    print("\nInstalling FiraCode font...")
+    def install_omp_font(os_key):
+        """Installs FiraCode font using oh-my-posh for all platforms."""
+        print("\nInstalling FiraCode font...")
 
-    # Skip font installation in WSL
-    if os_key == "Linux" and is_wsl():
-        print("⚠️  Skipping font installation in WSL environment")
-        print("   Fonts should be installed from Windows host, not WSL")
-        print("   Run 'oh-my-posh font install firacode' from Windows PowerShell/Command Prompt")
-        return True  # Return True since this is expected behavior
+        # Skip font installation in WSL
+        if os_key == "Linux" and is_wsl():
+            print("⚠️  Skipping font installation in WSL environment")
+            print("   Fonts should be installed from Windows host, not WSL")
+            print("   Run 'oh-my-posh font install firacode' from Windows PowerShell/Command Prompt")
+            return True  # Return True since this is expected behavior
 
-    # Check if FiraCode font is already installed
-    if is_firacode_installed(os_key):
-        print("ℹ️  FiraCode font is already installed, skipping installation")
-        return True
+        # Check if FiraCode font is already installed
+        if is_firacode_installed(os_key):
+            print("ℹ️  FiraCode font is already installed, skipping installation")
+            return True
 
+        # Add a small delay to ensure package installation has completed
+        import time
     # Add a small delay to ensure package installation has completed
-    import time
     time.sleep(2)
-
-    try:
-        # Prepare environment based on OS
-        updated_env = os.environ.copy()
-        omp_binary_path = None
-
-        if os_key == "Linux":
-            # Update PATH for current session to include oh-my-posh
-            home = os.path.expanduser("~")
-            omp_path = os.path.join(home, '.local/bin')
-            omp_binary_path = os.path.join(omp_path, 'oh-my-posh')
-            updated_env['PATH'] = f"{omp_path}:{updated_env.get('PATH', '')}"
-
-            # Debug: Check if binary exists
-            print(f"  Checking for oh-my-posh at: {omp_binary_path}")
-            if os.path.exists(omp_binary_path):
-                print(f"  ✅ Found oh-my-posh binary")
-            else:
-                print(f"  ❌ oh-my-posh binary not found at expected location")
-
-        elif os_key == "macOS":
-            # Add common Homebrew paths for oh-my-posh
-            homebrew_paths = ['/opt/homebrew/bin', '/usr/local/bin']
-            current_path = updated_env.get('PATH', '')
-            for path in homebrew_paths:
-                if path not in current_path:
-                    updated_env['PATH'] = f"{path}:{current_path}"
-                    current_path = updated_env['PATH']
-        elif os_key == "Windows":
-            # On Windows, find oh-my-posh installed via WinGet
-            possible_paths = [
-                os.path.expanduser("~\\AppData\\Local\\Programs\\oh-my-posh\\bin"),
-                "C:\\Program Files\\oh-my-posh\\bin",
-                os.path.expanduser("~\\AppData\\Local\\Microsoft\\WinGet\\Packages\\JanDeDobbeleer.OhMyPosh_Microsoft.Winget.Source_8wekyb3d8bbwe")
-            ]
-            current_path = updated_env.get('PATH', '')
+            # Prepare environment based on OS
+            updated_env = os.environ.copy()
             omp_binary_path = None
 
-            print("  Checking WinGet installation paths for oh-my-posh...")
-            for path in possible_paths:
-                omp_exe = os.path.join(path, 'oh-my-posh.exe')
-                print(f"    Checking: {omp_exe}")
-                if os.path.exists(omp_exe):
-                    print(f"    ✅ Found oh-my-posh.exe at: {path}")
-                    omp_binary_path = omp_exe
-                    if path not in current_path:
-                        updated_env['PATH'] = f"{path};{current_path}"
-                    break
+            if os_key == "Linux":
+                # Update PATH for current session to include oh-my-posh
+                home = os.path.expanduser("~")
+                omp_path = os.path.join(home, '.local/bin')
+                omp_binary_path = os.path.join(omp_path, 'oh-my-posh')
+                updated_env['PATH'] = f"{omp_path}:{updated_env.get('PATH', '')}"
+
+                # Debug: Check if binary exists
+                print(f"  Checking for oh-my-posh at: {omp_binary_path}")
+                if os.path.exists(omp_binary_path):
+                    print(f"  ✅ Found oh-my-posh binary")
                 else:
-                    print(f"    ❌ Not found at: {path}")
+                    print(f"  ❌ oh-my-posh binary not found at expected location")
 
-            if not omp_binary_path:
-                print("  ❌ oh-my-posh.exe not found in any expected WinGet locations")
+            elif os_key == "macOS":
+                # Add common Homebrew paths for oh-my-posh
+                homebrew_paths = ['/opt/homebrew/bin', '/usr/local/bin']
+                current_path = updated_env.get('PATH', '')
+                for path in homebrew_paths:
+                    if path not in current_path:
+                        updated_env['PATH'] = f"{path}:{current_path}"
+                        current_path = updated_env['PATH']
+            elif os_key == "Windows":
+                # On Windows, find oh-my-posh installed via WinGet
+                possible_paths = [
+                    os.path.expanduser("~\\AppData\\Local\\Programs\\oh-my-posh\\bin"),
+                    "C:\\Program Files\\oh-my-posh\\bin",
+                    os.path.expanduser("~\\AppData\\Local\\Microsoft\\WinGet\\Packages\\JanDeDobbeleer.OhMyPosh_Microsoft.Winget.Source_8wekyb3d8bbwe")
+                ]
+                current_path = updated_env.get('PATH', '')
+                omp_binary_path = None
 
-        # Debug: Show the PATH we're using
-        print(f"  Using PATH: {updated_env['PATH'][:100]}...")
+                print("  Checking WinGet installation paths for oh-my-posh...")
+                for path in possible_paths:
+                    omp_exe = os.path.join(path, 'oh-my-posh.exe')
+                    print(f"    Checking: {omp_exe}")
+                    if os.path.exists(omp_exe):
+                        print(f"    ✅ Found oh-my-posh.exe at: {path}")
+                        omp_binary_path = omp_exe
+                        if path not in current_path:
+                            updated_env['PATH'] = f"{path};{current_path}"
+                        break
+                    else:
+                        print(f"    ❌ Not found at: {path}")
 
-        # Try to run oh-my-posh version first to verify it's accessible
-        print("  Checking oh-my-posh accessibility...")
-        version_result = subprocess.run(["oh-my-posh", "--version"],
-                                       capture_output=True, text=True, env=updated_env)
+                if not omp_binary_path:
+                    print("  ❌ oh-my-posh.exe not found in any expected WinGet locations")
 
-        if version_result.returncode == 0:
-            print(f"  ✅ oh-my-posh is accessible, version: {version_result.stdout.strip()}")
-        else:
-            print(f"  ❌ oh-my-posh version check failed: {version_result.stderr.strip()}")
-            raise FileNotFoundError("oh-my-posh not accessible")
+            # Debug: Show the PATH we're using
+            print(f"  Using PATH: {updated_env['PATH'][:100]}...")
 
-        # Try to run oh-my-posh font install
-        print("  Running font installation...")
-        try:
-            result = subprocess.run(["oh-my-posh", "font", "install", "firacode"],
-                                  capture_output=True, text=True, env=updated_env, timeout=60)
+            # Try to run oh-my-posh version first to verify it's accessible
+            print("  Checking oh-my-posh accessibility...")
+            version_result = subprocess.run(["oh-my-posh", "--version"],
+                                           capture_output=True, text=True, env=updated_env)
 
-            print(f"  Font installation exit code: {result.returncode}")
-            if result.stdout:
-                print(f"  Stdout: {result.stdout.strip()}")
-            if result.stderr:
-                print(f"  Stderr: {result.stderr.strip()}")
-
-            if result.returncode == 0:
-                print("✅ FiraCode font installed successfully")
-                return True
+            if version_result.returncode == 0:
+                print(f"  ✅ oh-my-posh is accessible, version: {version_result.stdout.strip()}")
             else:
-                # If it fails, provide helpful message
-                print(f"❌ Failed to install FiraCode font. Exit code: {result.returncode}")
+                print(f"  ❌ oh-my-posh version check failed: {version_result.stderr.strip()}")
+                raise FileNotFoundError("oh-my-posh not accessible")
+
+            # Try to run oh-my-posh font install
+            print("  Running font installation...")
+            try:
+                result = subprocess.run(["oh-my-posh", "font", "install", "firacode"],
+                                      capture_output=True, text=True, env=updated_env, timeout=60)
+
+                print(f"  Font installation exit code: {result.returncode}")
+                if result.stdout:
+                    print(f"  Stdout: {result.stdout.strip()}")
+                if result.stderr:
+                    print(f"  Stderr: {result.stderr.strip()}")
+
+                if result.returncode == 0:
+                    print("✅ FiraCode font installed successfully")
+                    return True
+                else:
+                    # If it fails, provide helpful message
+                    print(f"❌ Failed to install FiraCode font. Exit code: {result.returncode}")
+                    print("You can install it manually later with: oh-my-posh font install firacode")
+                    return False
+
+            except subprocess.TimeoutExpired:
+                print("❌ Font installation timed out after 60 seconds")
                 print("You can install it manually later with: oh-my-posh font install firacode")
                 return False
 
-        except subprocess.TimeoutExpired:
-            print("❌ Font installation timed out after 60 seconds")
+        except FileNotFoundError as e:
+            print("❌ Error: 'oh-my-posh' command not found. Make sure oh-my-posh is installed and in PATH.")
             print("You can install it manually later with: oh-my-posh font install firacode")
             return False
-
-    except FileNotFoundError as e:
-        print("❌ Error: 'oh-my-posh' command not found. Make sure oh-my-posh is installed and in PATH.")
-        print("You can install it manually later with: oh-my-posh font install firacode")
-        return False
-    except Exception as e:
-        print(f"❌ Unexpected error installing font: {e}")
-        print("You can install it manually later with: oh-my-posh font install firacode")
-        return False
+        except Exception as e:
+            print(f"❌ Unexpected error installing font: {e}")
+            print("You can install it manually later with: oh-my-posh font install firacode")
+            return False
 
 def main():
     """Main function to run the installation process."""
@@ -483,8 +570,16 @@ def main():
                 print("\n⚠️  Installation completed with issues: FiraCode font installation failed")
             else:
                 print("\n✅ Installation process completed successfully!")
+
+            # Set up fish shell after everything is installed
+            if os_key in ["macOS", "Linux"]:
+                setup_fish_post_install(os_key)
         else:
             print("\n✅ Installation process completed!")
+
+            # Still try to set up fish even if oh-my-posh wasn't installed
+            if os_key in ["macOS", "Linux"]:
+                setup_fish_post_install(os_key)
     else:
         print("Unsupported operating system or no package list found.")
 
