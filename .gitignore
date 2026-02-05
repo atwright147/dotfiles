@@ -1,1 +1,5 @@
 *.bak
+
+# Fish shell
+fish/fish_variables
+fish/conf.d/fish_frozen_*.fish
