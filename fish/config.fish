@@ -25,4 +25,3 @@ end
 # Added by LM Studio CLI (lms)
 set -gx PATH $PATH /Users/andy/.lmstudio/bin
 # End of LM Studio CLI section
-
