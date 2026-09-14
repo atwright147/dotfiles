@@ -225,8 +225,11 @@ def install_cargo_packages(packages):
     for package in packages:
         try:
             print(f"  - Installing {package} with cargo...")
-            command = ["cargo", "install", package]
-            subprocess.run(command, check=True)
+            try:
+                subprocess.run(["cargo", "install", "--locked", package], check=True)
+            except subprocess.CalledProcessError:
+                print(f"  ⚠️  --locked failed for {package}, retrying unlocked...")
+                subprocess.run(["cargo", "install", package], check=True)
             print(f"  ✅ Successfully installed {package}")
         except subprocess.CalledProcessError as e:
             print(f"  ❌ Failed to install {package}. Error: {e}")
