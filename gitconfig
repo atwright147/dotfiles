@@ -5,6 +5,8 @@
   email = atwright147@gmail.com
 [status]
   branch = true
+[pull]
+  rebase = false
 [branch]
   sort = -committerdate
 [column]
