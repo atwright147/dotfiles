@@ -71,64 +71,6 @@ def find_oh_my_posh(os_key):
 
     return None
 
-def is_firacode_installed(os_key):
-
-    """Checks if FiraCode font is already installed on the system."""
-    try:
-        if os_key == "Windows":
-            # Check Windows font directories
-            font_dirs = [
-                os.path.expanduser("~\\AppData\\Local\\Microsoft\\Windows\\Fonts"),
-                "C:\\Windows\\Fonts"
-            ]
-            firacode_patterns = ['firacode', 'fira code', 'fira_code']
-
-            for font_dir in font_dirs:
-                if os.path.exists(font_dir):
-                    for file in os.listdir(font_dir):
-                        file_lower = file.lower()
-                        if any(pattern in file_lower for pattern in firacode_patterns):
-                            return True
-
-        elif os_key == "macOS":
-            # Check macOS font directories
-            font_dirs = [
-                os.path.expanduser("~/Library/Fonts"),
-                "/Library/Fonts",
-                "/System/Library/Fonts"
-            ]
-            firacode_patterns = ['firacode', 'fira code', 'fira_code']
-
-            for font_dir in font_dirs:
-                if os.path.exists(font_dir):
-                    for file in os.listdir(font_dir):
-                        file_lower = file.lower()
-                        if any(pattern in file_lower for pattern in firacode_patterns):
-                            return True
-
-        elif os_key == "Linux":
-            # Check Linux font directories
-            font_dirs = [
-                os.path.expanduser("~/.local/share/fonts"),
-                os.path.expanduser("~/.fonts"),
-                "/usr/share/fonts",
-                "/usr/local/share/fonts"
-            ]
-            firacode_patterns = ['firacode', 'fira code', 'fira_code']
-
-            for font_dir in font_dirs:
-                if os.path.exists(font_dir):
-                    for root, dirs, files in os.walk(font_dir):
-                        for file in files:
-                            file_lower = file.lower()
-                            if any(pattern in file_lower for pattern in firacode_patterns):
-                                return True
-
-        return False
-    except Exception:
-        # If there's any error checking, assume font is not installed
-        return False
-
 def check_package_installed(package, package_manager):
     """Checks if a package is already installed."""
     try:
@@ -433,7 +375,7 @@ def install_fish_config():
 
 
 def install_omp_font(os_key):
-    """Installs FiraCode font using oh-my-posh for all platforms."""
+    """Installs or updates the FiraCode font using oh-my-posh for all platforms."""
     print("\nInstalling FiraCode font...")
 
     # Skip font installation in WSL
@@ -443,13 +385,11 @@ def install_omp_font(os_key):
         print("   Run 'oh-my-posh font install firacode' from Windows PowerShell/Command Prompt")
         return True  # Return True since this is expected behavior
 
-    # Check if FiraCode font is already installed
-    if is_firacode_installed(os_key):
-        print("ℹ️  FiraCode font is already installed, skipping installation")
-        return True
+    # Note: no "already installed" short-circuit here on purpose. The install
+    # command is idempotent, so re-running it refreshes the font to the current
+    # upstream release. A presence check would freeze an outdated version.
 
     # Add a small delay to ensure package installation has completed
-    import time
     time.sleep(2)
     # Prepare environment based on OS
     updated_env = os.environ.copy()
