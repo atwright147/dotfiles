@@ -1,0 +1,100 @@
+{
+  "activePreset": "zen-value",
+  "presets": {
+    "zen-value": {
+      "fast": {
+        "model": "opencode/big-pickle",
+        "costRatio": 1,
+        "description": "Big Pickle for read-only exploration, search, and simple lookups (OpenCode Zen; @fast is free on Zen while @medium and @heavy are pay-as-you-go, so costRatio is an estimated token-spend multiplier, not a price ratio)",
+        "steps": 30,
+        "whenToUse": [
+          "Codebase exploration and search",
+          "Simple file reads and listing",
+          "Grep/glob operations",
+          "Quick lookups and research"
+        ]
+      },
+      "medium": {
+        "model": "opencode/claude-sonnet-5-5",
+        "costRatio": 5,
+        "description": "Claude Sonnet 5.5 through OpenCode Zen for implementation, refactoring, and tests (billed per token; costRatio is an estimated token-spend multiplier, not a price ratio)",
+        "effort": "low",
+        "variant": "low",
+        "steps": 50,
+        "whenToUse": [
+          "Feature implementation",
+          "Refactoring",
+          "Writing tests",
+          "Code review",
+          "Bug fixes"
+        ]
+      },
+      "heavy": {
+        "model": "opencode/claude-opus-5-5",
+        "costRatio": 20,
+        "description": "Claude Opus 5.5 through OpenCode Zen for architecture, complex debugging, and security (billed per token; costRatio is an estimated token-spend multiplier, not a price ratio)",
+        "effort": "xhigh",
+        "variant": "xhigh",
+        "steps": 120,
+        "whenToUse": [
+          "Architecture decisions",
+          "Complex debugging (after 2+ failures)",
+          "Security review",
+          "Performance optimization"
+        ]
+      }
+    },
+    "zen-fallback": {
+      "fast": {
+        "model": "opencode/deepseek-v4-flash",
+        "costRatio": 1,
+        "description": "DeepSeek V4 Flash on Zen: overflow tier for zen-value, a different model family so a Claude-on-Zen regression does not blind both presets",
+        "steps": 30,
+        "whenToUse": [
+          "Codebase exploration and search",
+          "Simple file reads and listing",
+          "Grep/glob operations"
+        ]
+      },
+      "medium": {
+        "model": "opencode/qwen3.5-plus",
+        "costRatio": 2,
+        "description": "Qwen 3.5 Plus on Zen: overflow implementation tier for zen-value",
+        "steps": 50,
+        "whenToUse": [
+          "Feature implementation",
+          "Refactoring",
+          "Writing tests",
+          "Bug fixes"
+        ]
+      },
+      "heavy": {
+        "model": "opencode/gpt-6.1-sol",
+        "costRatio": 30,
+        "description": "GPT-6.1 Sol on Zen: overflow architecture and security tier for zen-value",
+        "effort": "high",
+        "variant": "high",
+        "steps": 120,
+        "whenToUse": [
+          "Architecture decisions",
+          "Complex debugging (after 2+ failures)",
+          "Security review"
+        ]
+      }
+    }
+  },
+  "fallback": {
+    "presets": {
+      "zen-value": {
+        "opencode": [
+          "zen-fallback"
+        ]
+      },
+      "zen-fallback": {
+        "opencode": [
+          "zen-value"
+        ]
+      }
+    }
+  }
+}
