@@ -2,6 +2,7 @@
 
 import os
 import json
+import shutil
 import subprocess
 import sys
 import platform
@@ -37,7 +38,41 @@ def is_wsl():
     except:
         return False
 
+def find_oh_my_posh(os_key):
+    """Locates the oh-my-posh binary, returning its path or None.
+
+    The install location differs per platform: the Linux script installer drops it
+    in ~/.local/bin, macOS gets it from Homebrew, and Windows via WinGet.
+    """
+    binary = 'oh-my-posh.exe' if os_key == "Windows" else 'oh-my-posh'
+
+    if os_key == "Windows":
+        candidates = [
+            os.path.expanduser("~\\AppData\\Local\\Programs\\oh-my-posh\\bin"),
+            "C:\\Program Files\\oh-my-posh\\bin",
+            os.path.expanduser("~\\AppData\\Local\\Microsoft\\WinGet\\Packages\\JanDeDobbeleer.OhMyPosh_Microsoft.Winget.Source_8wekyb3d8bbwe"),
+        ]
+    else:
+        candidates = [
+            os.path.join(os.path.expanduser("~"), '.local', 'bin'),
+            '/opt/homebrew/bin',
+            '/usr/local/bin',
+            '/home/linuxbrew/.linuxbrew/bin',
+        ]
+        # Honour the caller's PATH before falling back to well-known prefixes
+        found = shutil.which(binary)
+        if found:
+            return found
+
+    for directory in candidates:
+        path = os.path.join(directory, binary)
+        if os.path.exists(path):
+            return path
+
+    return None
+
 def is_firacode_installed(os_key):
+
     """Checks if FiraCode font is already installed on the system."""
     try:
         if os_key == "Windows":
@@ -284,11 +319,10 @@ def setup_fish_post_install(os_key):
             return False
 
         # Update PATH to include oh-my-posh if it was installed
-        home = os.path.expanduser("~")
-        omp_path = os.path.join(home, '.local/bin')
+        omp_binary = find_oh_my_posh(os_key)
 
-        if os.path.exists(os.path.join(omp_path, 'oh-my-posh')):
-            print(f"  ✅ Found oh-my-posh at {omp_path}")
+        if omp_binary:
+            print(f"  ✅ Found oh-my-posh at {os.path.dirname(omp_binary)}")
 
             # Check if fish config exists and can be sourced
             fish_config_path = os.path.expanduser("~/.config/fish")
@@ -310,7 +344,8 @@ def setup_fish_post_install(os_key):
             else:
                 print(f"  ❌ Fish configuration directory not found at {fish_config_path}")
         else:
-            print(f"  ⚠️  oh-my-posh not found at {omp_path}")
+            print("  ⚠️  oh-my-posh not found (checked PATH, ~/.local/bin and Homebrew prefixes)")
+            print("     Install it with 'brew install oh-my-posh' (macOS) or see https://ohmyposh.dev/docs/installation")
 
         return False
 
@@ -418,62 +453,24 @@ def install_omp_font(os_key):
     time.sleep(2)
     # Prepare environment based on OS
     updated_env = os.environ.copy()
-    omp_binary_path = None
+    omp_binary_path = find_oh_my_posh(os_key)
+
+    if not omp_binary_path:
+        print("  ❌ oh-my-posh binary not found (checked PATH, ~/.local/bin and Homebrew prefixes)")
+        print("  You can install it with: brew install oh-my-posh (macOS) or see https://ohmyposh.dev/docs/installation")
+        return False
+
+    omp_dir = os.path.dirname(omp_binary_path)
+    print(f"  Using oh-my-posh at: {omp_binary_path}")
+    if omp_dir not in updated_env.get('PATH', ''):
+        separator = ';' if os_key == "Windows" else ':'
+        updated_env['PATH'] = f"{omp_dir}{separator}{updated_env.get('PATH', '')}"
+
+    # Debug: Show the PATH we're using
+    print(f"  Using PATH: {updated_env['PATH'][:100]}...")
+
     try:
-        if os_key == "Linux":
-            # Update PATH for current session to include oh-my-posh
-            home = os.path.expanduser("~")
-            omp_path = os.path.join(home, '.local/bin')
-            omp_binary_path = os.path.join(omp_path, 'oh-my-posh')
-            updated_env['PATH'] = f"{omp_path}:{updated_env.get('PATH', '')}"
-
-            # Debug: Check if binary exists
-            print(f"  Checking for oh-my-posh at: {omp_binary_path}")
-            if os.path.exists(omp_binary_path):
-                print(f"  ✅ Found oh-my-posh binary")
-            else:
-                print(f"  ❌ oh-my-posh binary not found at expected location")
-
-        elif os_key == "macOS":
-            # Add common Homebrew paths for oh-my-posh
-            homebrew_paths = ['/opt/homebrew/bin', '/usr/local/bin']
-            current_path = updated_env.get('PATH', '')
-            for path in homebrew_paths:
-                if path not in current_path:
-                    updated_env['PATH'] = f"{path}:{current_path}"
-                    current_path = updated_env['PATH']
-        elif os_key == "Windows":
-            # On Windows, find oh-my-posh installed via WinGet
-            possible_paths = [
-                os.path.expanduser("~\\AppData\\Local\\Programs\\oh-my-posh\\bin"),
-                "C:\\Program Files\\oh-my-posh\\bin",
-                os.path.expanduser("~\\AppData\\Local\\Microsoft\\WinGet\\Packages\\JanDeDobbeleer.OhMyPosh_Microsoft.Winget.Source_8wekyb3d8bbwe")
-            ]
-            current_path = updated_env.get('PATH', '')
-            omp_binary_path = None
-
-            print("  Checking WinGet installation paths for oh-my-posh...")
-            for path in possible_paths:
-                omp_exe = os.path.join(path, 'oh-my-posh.exe')
-                print(f"    Checking: {omp_exe}")
-                if os.path.exists(omp_exe):
-                    print(f"    ✅ Found oh-my-posh.exe at: {path}")
-                    omp_binary_path = omp_exe
-                    if path not in current_path:
-                        updated_env['PATH'] = f"{path};{current_path}"
-                    break
-                else:
-                    print(f"    ❌ Not found at: {path}")
-
-            if not omp_binary_path:
-                print("  ❌ oh-my-posh.exe not found in any expected WinGet locations")
-
-        # Debug: Show the PATH we're using
-        print(f"  Using PATH: {updated_env['PATH'][:100]}...")
-
-        # Try to run oh-my-posh version first to verify it's accessible
-        print("  Checking oh-my-posh accessibility...")
-        version_result = subprocess.run(["oh-my-posh", "--version"],
+        version_result = subprocess.run([omp_binary_path, "--version"],
                                        capture_output=True, text=True, env=updated_env)
 
         if version_result.returncode == 0:
@@ -485,7 +482,7 @@ def install_omp_font(os_key):
         # Try to run oh-my-posh font install
         print("  Running font installation...")
         try:
-            result = subprocess.run(["oh-my-posh", "font", "install", "firacode"],
+            result = subprocess.run([omp_binary_path, "font", "install", "firacode"],
                                   capture_output=True, text=True, env=updated_env, timeout=60)
 
             print(f"  Font installation exit code: {result.returncode}")
