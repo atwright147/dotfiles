@@ -396,125 +396,127 @@ def install_fish_config():
         print(f"❌ Unexpected error installing fish configuration: {e}")
         return False
 
-    def install_omp_font(os_key):
-        """Installs FiraCode font using oh-my-posh for all platforms."""
-        print("\nInstalling FiraCode font...")
 
-        # Skip font installation in WSL
-        if os_key == "Linux" and is_wsl():
-            print("⚠️  Skipping font installation in WSL environment")
-            print("   Fonts should be installed from Windows host, not WSL")
-            print("   Run 'oh-my-posh font install firacode' from Windows PowerShell/Command Prompt")
-            return True  # Return True since this is expected behavior
+def install_omp_font(os_key):
+    """Installs FiraCode font using oh-my-posh for all platforms."""
+    print("\nInstalling FiraCode font...")
 
-        # Check if FiraCode font is already installed
-        if is_firacode_installed(os_key):
-            print("ℹ️  FiraCode font is already installed, skipping installation")
-            return True
+    # Skip font installation in WSL
+    if os_key == "Linux" and is_wsl():
+        print("⚠️  Skipping font installation in WSL environment")
+        print("   Fonts should be installed from Windows host, not WSL")
+        print("   Run 'oh-my-posh font install firacode' from Windows PowerShell/Command Prompt")
+        return True  # Return True since this is expected behavior
 
-        # Add a small delay to ensure package installation has completed
-        import time
-        time.sleep(2)
-        # Prepare environment based on OS
-        updated_env = os.environ.copy()
-        omp_binary_path = None
-        try:
-            if os_key == "Linux":
-                # Update PATH for current session to include oh-my-posh
-                home = os.path.expanduser("~")
-                omp_path = os.path.join(home, '.local/bin')
-                omp_binary_path = os.path.join(omp_path, 'oh-my-posh')
-                updated_env['PATH'] = f"{omp_path}:{updated_env.get('PATH', '')}"
-    
-                # Debug: Check if binary exists
-                print(f"  Checking for oh-my-posh at: {omp_binary_path}")
-                if os.path.exists(omp_binary_path):
-                    print(f"  ✅ Found oh-my-posh binary")
-                else:
-                    print(f"  ❌ oh-my-posh binary not found at expected location")
-    
-            elif os_key == "macOS":
-                # Add common Homebrew paths for oh-my-posh
-                homebrew_paths = ['/opt/homebrew/bin', '/usr/local/bin']
-                current_path = updated_env.get('PATH', '')
-                for path in homebrew_paths:
-                    if path not in current_path:
-                        updated_env['PATH'] = f"{path}:{current_path}"
-                        current_path = updated_env['PATH']
-            elif os_key == "Windows":
-                # On Windows, find oh-my-posh installed via WinGet
-                possible_paths = [
-                    os.path.expanduser("~\\AppData\\Local\\Programs\\oh-my-posh\\bin"),
-                    "C:\\Program Files\\oh-my-posh\\bin",
-                    os.path.expanduser("~\\AppData\\Local\\Microsoft\\WinGet\\Packages\\JanDeDobbeleer.OhMyPosh_Microsoft.Winget.Source_8wekyb3d8bbwe")
-                ]
-                current_path = updated_env.get('PATH', '')
-                omp_binary_path = None
-    
-                print("  Checking WinGet installation paths for oh-my-posh...")
-                for path in possible_paths:
-                    omp_exe = os.path.join(path, 'oh-my-posh.exe')
-                    print(f"    Checking: {omp_exe}")
-                    if os.path.exists(omp_exe):
-                        print(f"    ✅ Found oh-my-posh.exe at: {path}")
-                        omp_binary_path = omp_exe
-                        if path not in current_path:
-                            updated_env['PATH'] = f"{path};{current_path}"
-                        break
-                    else:
-                        print(f"    ❌ Not found at: {path}")
-    
-                if not omp_binary_path:
-                    print("  ❌ oh-my-posh.exe not found in any expected WinGet locations")
-    
-            # Debug: Show the PATH we're using
-            print(f"  Using PATH: {updated_env['PATH'][:100]}...")
-    
-            # Try to run oh-my-posh version first to verify it's accessible
-            print("  Checking oh-my-posh accessibility...")
-            version_result = subprocess.run(["oh-my-posh", "--version"],
-                                           capture_output=True, text=True, env=updated_env)
-    
-            if version_result.returncode == 0:
-                print(f"  ✅ oh-my-posh is accessible, version: {version_result.stdout.strip()}")
+    # Check if FiraCode font is already installed
+    if is_firacode_installed(os_key):
+        print("ℹ️  FiraCode font is already installed, skipping installation")
+        return True
+
+    # Add a small delay to ensure package installation has completed
+    import time
+    time.sleep(2)
+    # Prepare environment based on OS
+    updated_env = os.environ.copy()
+    omp_binary_path = None
+    try:
+        if os_key == "Linux":
+            # Update PATH for current session to include oh-my-posh
+            home = os.path.expanduser("~")
+            omp_path = os.path.join(home, '.local/bin')
+            omp_binary_path = os.path.join(omp_path, 'oh-my-posh')
+            updated_env['PATH'] = f"{omp_path}:{updated_env.get('PATH', '')}"
+
+            # Debug: Check if binary exists
+            print(f"  Checking for oh-my-posh at: {omp_binary_path}")
+            if os.path.exists(omp_binary_path):
+                print(f"  ✅ Found oh-my-posh binary")
             else:
-                print(f"  ❌ oh-my-posh version check failed: {version_result.stderr.strip()}")
-                raise FileNotFoundError("oh-my-posh not accessible")
-    
-            # Try to run oh-my-posh font install
-            print("  Running font installation...")
-            try:
-                result = subprocess.run(["oh-my-posh", "font", "install", "firacode"],
-                                      capture_output=True, text=True, env=updated_env, timeout=60)
-    
-                print(f"  Font installation exit code: {result.returncode}")
-                if result.stdout:
-                    print(f"  Stdout: {result.stdout.strip()}")
-                if result.stderr:
-                    print(f"  Stderr: {result.stderr.strip()}")
-    
-                if result.returncode == 0:
-                    print("✅ FiraCode font installed successfully")
-                    return True
+                print(f"  ❌ oh-my-posh binary not found at expected location")
+
+        elif os_key == "macOS":
+            # Add common Homebrew paths for oh-my-posh
+            homebrew_paths = ['/opt/homebrew/bin', '/usr/local/bin']
+            current_path = updated_env.get('PATH', '')
+            for path in homebrew_paths:
+                if path not in current_path:
+                    updated_env['PATH'] = f"{path}:{current_path}"
+                    current_path = updated_env['PATH']
+        elif os_key == "Windows":
+            # On Windows, find oh-my-posh installed via WinGet
+            possible_paths = [
+                os.path.expanduser("~\\AppData\\Local\\Programs\\oh-my-posh\\bin"),
+                "C:\\Program Files\\oh-my-posh\\bin",
+                os.path.expanduser("~\\AppData\\Local\\Microsoft\\WinGet\\Packages\\JanDeDobbeleer.OhMyPosh_Microsoft.Winget.Source_8wekyb3d8bbwe")
+            ]
+            current_path = updated_env.get('PATH', '')
+            omp_binary_path = None
+
+            print("  Checking WinGet installation paths for oh-my-posh...")
+            for path in possible_paths:
+                omp_exe = os.path.join(path, 'oh-my-posh.exe')
+                print(f"    Checking: {omp_exe}")
+                if os.path.exists(omp_exe):
+                    print(f"    ✅ Found oh-my-posh.exe at: {path}")
+                    omp_binary_path = omp_exe
+                    if path not in current_path:
+                        updated_env['PATH'] = f"{path};{current_path}"
+                    break
                 else:
-                    # If it fails, provide helpful message
-                    print(f"❌ Failed to install FiraCode font. Exit code: {result.returncode}")
-                    print("You can install it manually later with: oh-my-posh font install firacode")
-                    return False
-    
-            except subprocess.TimeoutExpired:
-                print("❌ Font installation timed out after 60 seconds")
+                    print(f"    ❌ Not found at: {path}")
+
+            if not omp_binary_path:
+                print("  ❌ oh-my-posh.exe not found in any expected WinGet locations")
+
+        # Debug: Show the PATH we're using
+        print(f"  Using PATH: {updated_env['PATH'][:100]}...")
+
+        # Try to run oh-my-posh version first to verify it's accessible
+        print("  Checking oh-my-posh accessibility...")
+        version_result = subprocess.run(["oh-my-posh", "--version"],
+                                       capture_output=True, text=True, env=updated_env)
+
+        if version_result.returncode == 0:
+            print(f"  ✅ oh-my-posh is accessible, version: {version_result.stdout.strip()}")
+        else:
+            print(f"  ❌ oh-my-posh version check failed: {version_result.stderr.strip()}")
+            raise FileNotFoundError("oh-my-posh not accessible")
+
+        # Try to run oh-my-posh font install
+        print("  Running font installation...")
+        try:
+            result = subprocess.run(["oh-my-posh", "font", "install", "firacode"],
+                                  capture_output=True, text=True, env=updated_env, timeout=60)
+
+            print(f"  Font installation exit code: {result.returncode}")
+            if result.stdout:
+                print(f"  Stdout: {result.stdout.strip()}")
+            if result.stderr:
+                print(f"  Stderr: {result.stderr.strip()}")
+
+            if result.returncode == 0:
+                print("✅ FiraCode font installed successfully")
+                return True
+            else:
+                # If it fails, provide helpful message
+                print(f"❌ Failed to install FiraCode font. Exit code: {result.returncode}")
                 print("You can install it manually later with: oh-my-posh font install firacode")
                 return False
 
-        except FileNotFoundError as e:
-            print("❌ Error: 'oh-my-posh' command not found. Make sure oh-my-posh is installed and in PATH.")
+        except subprocess.TimeoutExpired:
+            print("❌ Font installation timed out after 60 seconds")
             print("You can install it manually later with: oh-my-posh font install firacode")
             return False
-        except Exception as e:
-            print(f"❌ Unexpected error installing font: {e}")
-            print("You can install it manually later with: oh-my-posh font install firacode")
-            return False
+
+    except FileNotFoundError as e:
+        print("❌ Error: 'oh-my-posh' command not found. Make sure oh-my-posh is installed and in PATH.")
+        print("You can install it manually later with: oh-my-posh font install firacode")
+        return False
+    except Exception as e:
+        print(f"❌ Unexpected error installing font: {e}")
+        print("You can install it manually later with: oh-my-posh font install firacode")
+        return False
+
 
 def main():
     """Main function to run the installation process."""

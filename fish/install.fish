@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
 
 # Get the absolute path to the dotfiles directory
-set dotfiles_dir (dirname (realpath (status --current-filename)))
+set dotfiles_dir (dirname (realpath (status --current-filename | xargs dirname)))
 set fish_dir (realpath (status --current-filename | xargs dirname))
 
 rm -rf ~/.config/fish
