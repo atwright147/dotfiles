@@ -46,11 +46,22 @@ def find_oh_my_posh(os_key):
     """
     binary = 'oh-my-posh.exe' if os_key == "Windows" else 'oh-my-posh'
 
+    found = shutil.which(binary)
+    if found:
+        return found
+
     if os_key == "Windows":
+        local_app_data = os.environ.get('LOCALAPPDATA', os.path.expanduser("~\\AppData\\Local"))
+        program_files = os.environ.get('ProgramFiles', r"C:\Program Files")
         candidates = [
-            os.path.expanduser("~\\AppData\\Local\\Programs\\oh-my-posh\\bin"),
-            "C:\\Program Files\\oh-my-posh\\bin",
-            os.path.expanduser("~\\AppData\\Local\\Microsoft\\WinGet\\Packages\\JanDeDobbeleer.OhMyPosh_Microsoft.Winget.Source_8wekyb3d8bbwe"),
+            os.path.join(local_app_data, 'Programs', 'oh-my-posh', 'bin'),
+            os.path.join(local_app_data, 'Programs', 'oh-my-posh'),
+            os.path.join(program_files, 'oh-my-posh', 'bin'),
+            os.path.join(program_files, 'oh-my-posh'),
+            os.path.join(local_app_data, 'Microsoft', 'WinGet', 'Links'),
+            os.path.join(program_files, 'WinGet', 'Links'),
+            os.path.join(local_app_data, 'Microsoft', 'WinGet', 'Packages',
+                         'JanDeDobbeleer.OhMyPosh_Microsoft.Winget.Source_8wekyb3d8bbwe'),
         ]
     else:
         candidates = [
@@ -59,10 +70,6 @@ def find_oh_my_posh(os_key):
             '/usr/local/bin',
             '/home/linuxbrew/.linuxbrew/bin',
         ]
-        # Honour the caller's PATH before falling back to well-known prefixes
-        found = shutil.which(binary)
-        if found:
-            return found
 
     for directory in candidates:
         path = os.path.join(directory, binary)
@@ -396,8 +403,11 @@ def install_omp_font(os_key):
     omp_binary_path = find_oh_my_posh(os_key)
 
     if not omp_binary_path:
-        print("  ❌ oh-my-posh binary not found (checked PATH, ~/.local/bin and Homebrew prefixes)")
-        print("  You can install it with: brew install oh-my-posh (macOS) or see https://ohmyposh.dev/docs/installation")
+        print("  ❌ oh-my-posh binary not found in PATH or known installation directories")
+        if os_key == "Windows":
+            print("  Install with: winget install --id JanDeDobbeleer.OhMyPosh --exact --source winget")
+        else:
+            print("  See https://ohmyposh.dev/docs/installation")
         return False
 
     omp_dir = os.path.dirname(omp_binary_path)
@@ -411,7 +421,8 @@ def install_omp_font(os_key):
 
     try:
         version_result = subprocess.run([omp_binary_path, "--version"],
-                                       capture_output=True, text=True, env=updated_env)
+                                       capture_output=True, text=True, encoding='utf-8',
+                                       errors='replace', env=updated_env)
 
         if version_result.returncode == 0:
             print(f"  ✅ oh-my-posh is accessible, version: {version_result.stdout.strip()}")
@@ -423,7 +434,8 @@ def install_omp_font(os_key):
         print("  Running font installation...")
         try:
             result = subprocess.run([omp_binary_path, "font", "install", "firacode"],
-                                  capture_output=True, text=True, env=updated_env, timeout=60)
+                                  capture_output=True, text=True, encoding='utf-8',
+                                  errors='replace', env=updated_env, timeout=300)
 
             print(f"  Font installation exit code: {result.returncode}")
             if result.stdout:
@@ -441,7 +453,7 @@ def install_omp_font(os_key):
                 return False
 
         except subprocess.TimeoutExpired:
-            print("❌ Font installation timed out after 60 seconds")
+            print("❌ Font installation timed out after 300 seconds")
             print("You can install it manually later with: oh-my-posh font install firacode")
             return False
 
